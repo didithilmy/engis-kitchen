@@ -11,6 +11,8 @@
 #include <ncurses.h>
 #include <form.h>
 #include <panel.h>
+#include <string.h>
+#include <ctype.h>
 
 #define MAP_GRID_LINE 3
 #define MAP_GRID_COL 7
@@ -18,25 +20,58 @@
 #define MAP_TOP_OFFSET_LINE 3
 #define PANEL_WIDTH_LEFT 20
 
-int HORZ = 9;
-int VERT = 9;
+int M = 9;
+int N = 9;
 
 void printBorder(int y1, int y2, int x1, int x2);
+void driver(FORM *form, FIELD **fields, int ch);
+void buildGameScreen();
+void updateMoney(int money);
+void updateLife(int life);
+void updateTime(int time);
+void updateName(char *name);
+
+FIELD *field[2];
+FORM  *commandForm;
+WINDOW **mapWindows;
+WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
+WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
 
 int main() {
-    int i, j, n;
-
-    int HEIGHT = VERT * MAP_GRID_LINE;
-    int WIDTH = (HORZ * MAP_GRID_COL) + (2 * MAP_LEFT_OFFSET_COL);
-    int MAP_WIDTH = (HORZ * MAP_GRID_COL);
-
-    FIELD *field[2];
-    FORM  *commandForm;
+    WINDOW *mapWin[(M*N) + 1];
+    mapWindows = mapWin;
 
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+
+    buildGameScreen(N, M);
+
+    // Move cursor to beginning of field
+    form_driver(commandForm, REQ_BEG_FIELD);
+
+    /* Loop through to get user requests */
+    int ch;
+    while((ch = getch()) != KEY_F(1)) {
+        driver(commandForm, field, ch);
+        refresh();
+    }
+
+    /* Un post form and free the memory */
+    unpost_form(commandForm);
+    free_form(commandForm);
+    free_field(field[0]);
+
+    endwin();
+}
+
+void buildGameScreen(int HORZ, int VERT) {
+    int i, j, n;
+
+    int HEIGHT = VERT * MAP_GRID_LINE;
+    int WIDTH = (HORZ * MAP_GRID_COL) + (2 * MAP_LEFT_OFFSET_COL);
+    int MAP_WIDTH = (HORZ * MAP_GRID_COL);
 
     // Build command input
     field[0] = new_field(1, 50, MAP_TOP_OFFSET_LINE + HEIGHT+2, 12, 0, 0);
@@ -48,7 +83,9 @@ int main() {
 
     // Initiate name panel
     printBorder(0, 2, 0, PANEL_WIDTH_LEFT);
-    mvprintw(1, 1, "%s", "Engi");
+    nameWindow = newwin(1, PANEL_WIDTH_LEFT - 2, 1, 1);
+    refresh();
+    updateName("Engi Suengi");
 
     // Initiate queue panel
     printBorder(3, 3 + (HEIGHT/2), 0, PANEL_WIDTH_LEFT);
@@ -62,26 +99,32 @@ int main() {
     printBorder(3, 3 + (HEIGHT), WIDTH - PANEL_WIDTH_LEFT, WIDTH);
     mvprintw(4, WIDTH - PANEL_WIDTH_LEFT + 1, "%s", "Food Stack");
 
+    // Remaining width
     int remWidth = WIDTH - MAP_LEFT_OFFSET_COL;
 
     // Initiate money panel
     int moneyX1 = MAP_LEFT_OFFSET_COL;
     int moneyX2 = WIDTH - (remWidth/2);
     printBorder(0, 2, moneyX1, moneyX2);
-    mvprintw(1, moneyX1 + 1, "Money: %d", 300);
+    moneyWindow = newwin(1, moneyX2 - moneyX1 - 2, 1, moneyX1 + 1);
+    refresh();
+    updateMoney(0);
 
     // Initiate life panel
     int lifeX1 = moneyX2 + 1;
     int lifeX2 = WIDTH - (remWidth/4);
     printBorder(0, 2, lifeX1, lifeX2);
-    mvprintw(1, lifeX1 + 1, "Life: %d", 3);
+    lifeWindow = newwin(1, lifeX2 - lifeX1 - 2, 1, lifeX1 + 1);
+    refresh();
+    updateLife(3);
 
     // Initiate time panel
     int timeX1 = lifeX2 + 1;
     int timeX2 = WIDTH;
     printBorder(0, 2, timeX1, timeX2);
-    mvprintw(1, timeX1 + 1, "Time: %d", 1000);
-
+    timeWindow = newwin(1, timeX2 - timeX1 - 2, 1, timeX1 + 1);
+    refresh();
+    updateTime(1000);
 
     // Initiate MAP boxes
     n = 0;
@@ -89,42 +132,84 @@ int main() {
         for(j = 0; j < HORZ; j++) {
             n++;
             printBorder(MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE), MAP_TOP_OFFSET_LINE + ((i+1)*MAP_GRID_LINE), MAP_LEFT_OFFSET_COL + (j*MAP_GRID_COL), MAP_LEFT_OFFSET_COL + ((j+1)*MAP_GRID_COL));
+            mapWindows[n] = newwin(MAP_GRID_LINE - 2, MAP_GRID_COL - 2, MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE) + 1, MAP_LEFT_OFFSET_COL + (j*MAP_GRID_COL) + 1);
             refresh();
         }
     }
-
-    /* Loop through to get user requests */
-    int ch;
-    while((ch = getch()) != KEY_F(1))
-    {	switch(ch)
-        {	case KEY_DOWN:
-                /* Go to next field */
-                form_driver(commandForm, REQ_NEXT_FIELD);
-                /* Go to the end of the present buffer */
-                /* Leaves nicely at the last character */
-                form_driver(commandForm, REQ_END_LINE);
-                break;
-            case KEY_UP:
-                /* Go to previous field */
-                form_driver(commandForm, REQ_PREV_FIELD);
-                form_driver(commandForm, REQ_END_LINE);
-                break;
-            default:
-                /* If this is a normal character, it gets */
-                /* Printed				  */
-                form_driver(commandForm, ch);
-                break;
-        }
-    }
-
-    /* Un post form and free the memory */
-    unpost_form(commandForm);
-    free_form(commandForm);
-    free_field(field[0]);
-
-    endwin();
 }
 
+void updateMoney(int money) {
+    wclear(moneyWindow);
+    wprintw(moneyWindow, "Money: %d", money);
+    wrefresh(moneyWindow);
+}
+
+void updateLife(int life) {
+    wclear(lifeWindow);
+    wprintw(lifeWindow, "Life: %d", life);
+    wrefresh(lifeWindow);
+}
+
+void updateTime(int time) {
+    wclear(timeWindow);
+    wprintw(timeWindow, "Time: %d", time);
+    wrefresh(timeWindow);
+}
+
+void updateName(char *name) {
+    wclear(nameWindow);
+    wprintw(nameWindow, "%s", name);
+    wrefresh(nameWindow);
+}
+
+/**
+ * Source: https://gist.github.com/alan-mushi/c8a6f34d1df18574f643
+ * @param ch cursor
+ */
+void driver(FORM *form, FIELD **fields, int ch) {
+    int i;
+
+    switch (ch) {
+        case KEY_DOWN:
+            form_driver(form, REQ_NEXT_FIELD);
+            form_driver(form, REQ_END_LINE);
+            break;
+
+        case KEY_UP:
+            form_driver(form, REQ_PREV_FIELD);
+            form_driver(form, REQ_END_LINE);
+            break;
+
+        case KEY_LEFT:
+            form_driver(form, REQ_PREV_CHAR);
+            break;
+
+        case KEY_RIGHT:
+            form_driver(form, REQ_NEXT_CHAR);
+            break;
+
+            // Delete the char before cursor
+        case KEY_BACKSPACE:
+        case 127:
+            form_driver(form, REQ_DEL_PREV);
+            break;
+
+            // Delete the char under the cursor
+        case KEY_DC:
+            form_driver(form, REQ_DEL_CHAR);
+            break;
+
+        case KEY_ENTER:
+        case 10:
+            form_driver(form, REQ_CLR_FIELD);
+            // TODO do something on enter
+            break;
+
+        default:
+            form_driver(form, ch);
+            break;
+    }
+}
 
 void printBorder(int y1, int y2, int x1, int x2) {
     mvhline(y1, x1, 0, x2-x1);
