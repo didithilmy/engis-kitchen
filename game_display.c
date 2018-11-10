@@ -6,7 +6,7 @@
  * @file display.c
  */
 
-#include "display.h"
+#include "game_display.h"
 #include <stdlib.h>
 #include <stdio.h>
 

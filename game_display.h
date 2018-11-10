@@ -28,7 +28,7 @@ extern WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
 
 void printBorder(int y1, int y2, int x1, int x2);
 void ui_driver(FORM *form, FIELD **fields, int ch);
-void buildGameScreen();
+void buildGameScreen(int HORZ, int VERT);
 
 void updateMoney(int money);
 void updateLife(int life);

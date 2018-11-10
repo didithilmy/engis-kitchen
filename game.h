@@ -10,7 +10,7 @@
 
 #include "game.h"
 #include "ins_set.h"
-#include "display.h"
+#include "game_display.h"
 #include "adt/mesin_kata.h"
 
 void startGame();
