@@ -8,10 +8,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "game.h"
+#include "manager/intro.h"
+#include "manager/game.h"
 #include "ins_set.h"
-
-void printIntro();
 
 char command[32];
 
@@ -36,5 +35,13 @@ int main() {
     INS_LOAD = BuildKata("LOAD");
     INS_EXIT = BuildKata("EXIT");
 
-    startGame();
+    int ret = showIntro();
+    while(ret != 0) {
+        switch (ret) {
+            case 1:
+                startGame();
+            default:
+                ret = showIntro();
+        }
+    }
 }

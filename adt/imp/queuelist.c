@@ -1,4 +1,4 @@
-#include "queuelist.h"
+#include "../queuelist.h"
 
 void Alokasi (address *P, infotype X)
 // I.S. P Sembarang, X terdefinisi 

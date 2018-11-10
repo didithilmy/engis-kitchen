@@ -1,11 +1,11 @@
 /**
- * Mesin Kata
- * Implementation of the Mesin Kata primitives
+ * Engi's Kitchen Expansion
+ * Mesin Kata abstraction
  *
- * @author Muhammad Aditya Hilmy (18217025)
- * @date 26 September 2018
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  * @file mesin_kata.c
  */
+
 
 
 #include "../mesin_kata.h"

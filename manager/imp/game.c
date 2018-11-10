@@ -6,7 +6,7 @@
  * @file game.h
  */
 
-#include "game.h"
+#include "../game.h"
 
 int M = 9;
 int N = 9;

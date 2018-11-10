@@ -6,18 +6,15 @@
  * @file display.c
  */
 
-#include "game_display.h"
-#include <stdlib.h>
-#include <stdio.h>
-
-void resizeTerminalWindow(int width, int height);
+#include "../game_display.h"
 
 void buildGameScreen(int HORZ, int VERT) {
     int i, j, n;
 
     int HEIGHT = VERT * MAP_GRID_LINE;
     int WIDTH = (HORZ * MAP_GRID_COL) + (2 * (SIDE_PANEL_WIDTH + 1));
-    int MAP_WIDTH = (HORZ * MAP_GRID_COL);
+
+    curs_set(1);
 
     resizeTerminalWindow(WIDTH + 2, HEIGHT + MAP_TOP_OFFSET_LINE + MAP_TOP_OFFSET_LINE + 1);
 
@@ -27,7 +24,7 @@ void buildGameScreen(int HORZ, int VERT) {
     mapWindows = mapWin;
 
     // Build command input
-    field[0] = new_field(1, 50, MAP_TOP_OFFSET_LINE + HEIGHT+2, 12, 0, 0);
+    field[0] = new_field(1, 50, MAP_TOP_OFFSET_LINE + HEIGHT+2, 11, 0, 0);
     field_opts_off(field[0], O_AUTOSKIP);
     commandForm = new_form(field);
     post_form(commandForm);
@@ -109,71 +106,4 @@ void updateName(char *name) {
     wclear(nameWindow);
     wprintw(nameWindow, "%s", name);
     wrefresh(nameWindow);
-}
-
-
-/**
- * Source: https://gist.github.com/alan-mushi/c8a6f34d1df18574f643
- * @param ch cursor
- */
-void ui_driver(FORM *form, FIELD **fields, int ch) {
-    int i;
-
-    switch (ch) {
-        case KEY_DOWN:
-            form_driver(form, REQ_NEXT_FIELD);
-            form_driver(form, REQ_END_LINE);
-            break;
-
-        case KEY_UP:
-            form_driver(form, REQ_PREV_FIELD);
-            form_driver(form, REQ_END_LINE);
-            break;
-
-        case KEY_LEFT:
-            form_driver(form, REQ_PREV_CHAR);
-            break;
-
-        case KEY_RIGHT:
-            form_driver(form, REQ_NEXT_CHAR);
-            break;
-
-            // Delete the char before cursor
-        case KEY_BACKSPACE:
-        case 127:
-            form_driver(form, REQ_DEL_PREV);
-            break;
-
-            // Delete the char under the cursor
-        case KEY_DC:
-            form_driver(form, REQ_DEL_CHAR);
-            break;
-
-        case KEY_ENTER:
-        case 10:
-            form_driver(form, REQ_CLR_FIELD);
-            break;
-
-        default:
-            form_driver(form, ch);
-            break;
-    }
-}
-
-void printBorder(int y1, int y2, int x1, int x2) {
-    mvhline(y1, x1, 0, x2-x1);
-    mvhline(y2, x1, 0, x2-x1);
-    mvvline(y1, x1, 0, y2-y1);
-    mvvline(y1, x2, 0, y2-y1);
-    mvaddch(y1, x1, ACS_ULCORNER);
-    mvaddch(y2, x1, ACS_LLCORNER);
-    mvaddch(y1, x2, ACS_URCORNER);
-    mvaddch(y2, x2, ACS_LRCORNER);
-}
-
-void resizeTerminalWindow(int width, int height) {
-    char buf[48];
-
-    sprintf(buf, "printf '\\e[8;%d;%dt'", height, width);
-    system(buf);
 }

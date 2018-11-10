@@ -1,11 +1,11 @@
 /**
- * Mesin Karakter
- * This file contains the implementation of primitives defined in mesin_kar.h
+ * Engi's Kitchen Expansion
+ * Mesin Karakter abstraction
  *
- * @author Muhammad Aditya Hilmy (18217025)
- * @date 19 September 2018
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  * @file mesin_kar.c
  */
+
 
 #include "../mesin_kar.h"
 

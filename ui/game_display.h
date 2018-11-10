@@ -15,6 +15,8 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "display_commons.h"
+
 #define MAP_GRID_LINE 3
 #define MAP_GRID_COL 7
 #define MAP_TOP_OFFSET_LINE 3
@@ -26,8 +28,6 @@ extern WINDOW **mapWindows;
 extern WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
 extern WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
 
-void printBorder(int y1, int y2, int x1, int x2);
-void ui_driver(FORM *form, FIELD **fields, int ch);
 void buildGameScreen(int HORZ, int VERT);
 
 void updateMoney(int money);

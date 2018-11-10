@@ -1,2 +1,2 @@
 engi: main.c
-	gcc -lncurses -lform -lpanel -o main main.c game_display.c game.c adt/imp/mesin_kar.c adt/imp/mesin_kata.c -I.
+	gcc -lncurses -lform -lpanel -o main main.c ui/imp/game_display.c manager/imp/game.c adt/imp/mesin_kar.c adt/imp/mesin_kata.c manager/imp/intro.c ui/imp/intro_display.c ui/imp/display_commons.c -I.
