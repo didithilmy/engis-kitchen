@@ -11,11 +11,16 @@
 int M = 9;
 int N = 9;
 
+boolean ExecuteCommands();
+
 FIELD *field[2];
 FORM  *commandForm;
 WINDOW **mapWindows;
 WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
 WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
+
+Kata CKata;
+boolean EOP;
 
 void startGame() {
     initscr();
@@ -35,8 +40,11 @@ void startGame() {
     /* Loop through to get user requests */
     int ch;
     while((ch = getch()) != KEY_F(1)) {
-        driver(commandForm, field, ch);
-        refresh();
+        if(driver(commandForm, field, ch)) {
+            break;
+        } else {
+            refresh();
+        }
     }
 
     /* Un post form and free the memory */
@@ -50,21 +58,36 @@ void startGame() {
 /**
  * Logical form driver
  * When a case goes unhandled, it calls the ui_driver
+ * @return should exit program
  */
-void driver(FORM *form, FIELD **fields, int ch) {
+boolean driver(FORM *form, FIELD **fields, int ch) {
     int i;
     char *command;
 
     switch (ch) {
         case KEY_ENTER:
         case 10:
-            // TODO do something on enter
             form_driver(form, REQ_BEG_FIELD);
 
             command = field_buffer(fields[0], 0);
-            updateName(command);
+            STARTKATA(command);
+
+            // If execute command returns true, should exit program
+            if(ExecuteCommands()) return true;
         default:
             ui_driver(form, fields, ch);
-            break;
+            return false;
     }
+}
+
+/**
+ * Execute command stored in CKata
+ * @return should exit program
+ */
+boolean ExecuteCommands() {
+    if(CompareKata(CKata, INS_EXIT, false)) {
+        return true;
+    }
+
+    return false;
 }
