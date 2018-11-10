@@ -21,6 +21,7 @@ extern FIELD *intro_field[2];
 extern FORM  *nameForm;
 
 void buildIntroScreen();
+void showNameForm();
 
 
 #endif //ENGIS_KITCHEN_INTRO_DISPLAY_H

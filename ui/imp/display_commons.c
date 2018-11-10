@@ -65,6 +65,17 @@ void printBorder(int y1, int y2, int x1, int x2) {
     mvaddch(y2, x2, ACS_LRCORNER);
 }
 
+void wPrintBorder(WINDOW *win, int y1, int y2, int x1, int x2) {
+    mvwhline(win, y1, x1, 0, x2-x1);
+    mvwhline(win, y2, x1, 0, x2-x1);
+    mvwvline(win, y1, x1, 0, y2-y1);
+    mvwvline(win, y1, x2, 0, y2-y1);
+    mvwaddch(win, y1, x1, ACS_ULCORNER);
+    mvwaddch(win, y2, x1, ACS_LLCORNER);
+    mvwaddch(win, y1, x2, ACS_URCORNER);
+    mvwaddch(win, y2, x2, ACS_LRCORNER);
+}
+
 void resizeTerminalWindow(int width, int height) {
     char buf[48];
 

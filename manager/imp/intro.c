@@ -7,7 +7,6 @@
  */
 
 #include "../intro.h"
-#include "../../ui/game_display.h"
 
 int showIntro() {
     int retval = 0;
@@ -19,9 +18,6 @@ int showIntro() {
     keypad(stdscr, TRUE);
 
     buildIntroScreen();
-
-    form_driver(nameForm, REQ_BEG_FIELD);
-
 
     /* Loop through to get user requests */
     int ch = getch();
@@ -44,18 +40,10 @@ int showIntro() {
                 keep_requesting = false;
                 retval = 0;
                 break;
-            default:
-                ui_driver(nameForm, intro_field, ch);
-
         }
         if(keep_requesting)
             ch = getch();
     }
-
-    // Free form
-    unpost_form(nameForm);
-    free_form(nameForm);
-    free_field(intro_field[0]);
 
     endwin();
 

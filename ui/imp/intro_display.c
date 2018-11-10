@@ -10,21 +10,11 @@
 
 WINDOW *window;
 
-FIELD *intro_field[2];
-FORM  *nameForm;
-
 void buildIntroScreen() {
-    // Build command input
-    intro_field[0] = new_field(1, 50, 23, 16, 0, 0);
-    field_opts_off(intro_field[0], O_AUTOSKIP);
-    nameForm = new_form(intro_field);
-    post_form(nameForm);
-    mvprintw(23, 3, "%s", "Player Name: ");
-    printBorder(22, 24, 1, 70);
+    curs_set(0);
 
-    refresh();
+    window = newwin(22, 100, 1, 1);
 
-    window = newwin(21, 100, 1, 1);
     refresh();
 
     wprintw(window, "\n  ______             _ _       _  ___ _       _                 \n"
@@ -45,15 +35,17 @@ void buildIntroScreen() {
     wprintw(window, "\nPress one of the keys of the menu below.");
     wrefresh(window);
 
-    printBorder(19, 21, 1, 17);
-    mvprintw(20, 3, "New Game (F1)");
+    wPrintBorder(window, 19, 21, 0, 16);
+    mvwprintw(window, 20, 2, "New Game (F1)");
 
-    printBorder(19, 21, 19, 37);
-    mvprintw(20, 21, "Start Game (F2)");
+    wPrintBorder(window, 19, 21, 18, 36);
+    mvwprintw(window, 20, 20, "Start Game (F2)");
 
-    printBorder(19, 21, 39, 56);
-    mvprintw(20, 41, "Load Game (F3)");
+    wPrintBorder(window, 19, 21, 38, 55);
+    mvwprintw(window, 20, 40, "Load Game (F3)");
 
-    printBorder(19, 21, 58, 70);
-    mvprintw(20, 60, "Exit (F4)");
+    wPrintBorder(window, 19, 21, 57, 69);
+    mvwprintw(window, 20, 59, "Exit (F4)");
+
+    wrefresh(window);
 }
