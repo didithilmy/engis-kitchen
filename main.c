@@ -12,15 +12,28 @@
 
 void printIntro();
 
-char *command;
+char command;
 
 int main() {
     printIntro();
-    startGame();
+
+    printf("Command: ");
+    scanf("%c", &command);
+    while(command != 'x') {
+        switch(command) {
+            case 's':
+                startGame();
+                break;
+        }
+
+        printf("Command: ");
+        scanf("\n%c", &command);
+    }
 }
 
 void printIntro() {
-    printf("  ______             _ _       _  ___ _       _                 \n"
+    system("clear");
+    printf("\n  ______             _ _       _  ___ _       _                 \n"
                    " |  ____|           (_| )     | |/ (_) |     | |                \n"
                    " | |__   _ __   __ _ _|/ ___  | ' / _| |_ ___| |__   ___ _ __   \n"
                    " |  __| | '_ \\ / _` | | / __| |  < | | __/ __| '_ \\ / _ \\ '_ \\  \n"
@@ -34,6 +47,4 @@ void printIntro() {
                    "             | |                                                \n"
                    "             |_|                                                \n");
     printf("\nWelcome to Engi\'s Kitchen Expansion! It\'s been a year since I see you.\n");
-    printf("> ");
-
 }
