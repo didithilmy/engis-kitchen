@@ -1,4 +1,4 @@
-#include "stacklist.h"
+#include "../stacklist.h"
 
 //Konstruktor/Kreator 
 void CreateEmpty (Stack *S)
