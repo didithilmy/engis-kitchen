@@ -115,8 +115,22 @@ void driver(FORM *form, FIELD **fields, int ch) {
  * Execute command stored in CKata
  */
 void ExecuteCommands() {
+    DataType dt;
+
     if(CompareKata(CKata, INS_EXIT, false)) {
         publish_event(EXIT_GAME);
+    } else if(CompareKata(CKata, INS_MV_UP, false)) {
+        dt.cmd = CMD_GU;
+        publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(CKata, INS_MV_DOWN, false)) {
+        dt.cmd = CMD_GD;
+        publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(CKata, INS_MV_LEFT, false)) {
+        dt.cmd = CMD_GL;
+        publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(CKata, INS_MV_RIGHT, false)) {
+        dt.cmd = CMD_GR;
+        publish_1p_event(COMMAND, dt);
     }
 }
 
