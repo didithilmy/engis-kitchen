@@ -1,6 +1,6 @@
 /* ********** Definisi TYPE MATRIKS dengan indeks dan elemen integer ********** */
 
-#include "matriks.h"
+#include "../matriks.h"
 #include <stdio.h>
     
 /* *** Konstruktor membentuk MATRIKS *** */

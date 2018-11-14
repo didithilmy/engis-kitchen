@@ -46,10 +46,10 @@ void publish_event(Event event) {
 
 void publish_1p_event(Event event, DataType data)  {
     int i;
-    f_broadcast f;
+    f_broadcast_1p f;
     for(i = 1; i <= events.T[event].broadcast1PListeners.N; i++) {
         f = events.T[event].broadcast1PListeners.T[i];
-        f();
+        f(data);
     }
 }
 

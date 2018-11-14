@@ -19,6 +19,7 @@ typedef union {
     char character;
     char *string;
     Kata kata;
+    Commands cmd;
 } DataType;
 
 

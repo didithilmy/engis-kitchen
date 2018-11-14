@@ -7,16 +7,24 @@
  */
 
 #include "../game_ui.h"
-#include "../../adt/mesin_kata.h"
 #include "../../ins_set.h"
+#include "../../eventbus/eventbus.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands();
 void onStartGame();
 void onExitGame();
 
-int M = 9, N = 9;
+void updateMoney(DataType money);
+void updateLife(DataType life);
+void updateTime(DataType time);
+void updateName(DataType name);
+
+// Global variables
+
 boolean isGameRunning;
+
+DataType playerName, currentMoney, currentTime, currentLife;
 
 /**
  * Game UI initialization procedure
@@ -26,6 +34,10 @@ void game_ui_init() {
     // Subscribe to events
     listen_event(START_GAME, &onStartGame);
     listen_event(EXIT_GAME, &onExitGame);
+    listen_1p_event(SET_NAME, &updateName);
+    listen_1p_event(SET_LIFE, &updateLife);
+    listen_1p_event(SET_TIME, &updateTime);
+    listen_1p_event(SET_MONEY, &updateMoney);
 }
 
 /**
@@ -42,11 +54,13 @@ void onStartGame() {
     keypad(stdscr, TRUE);
 
     // Build game screen
-    buildGameScreen(N, M);
-    updateName("Engi Suengi");
-    updateTime(1000);
-    updateLife(3);
-    updateMoney(2000);
+    buildGameScreen(publish_getval_event(GET_MAP_HEIGHT).integer, publish_getval_event(GET_MAP_WIDTH).integer);
+
+    // Set parameters
+    updateName(playerName);
+    updateMoney(currentMoney);
+    updateLife(currentLife);
+    updateTime(currentTime);
 
     // Move cursor to beginning of field
     form_driver(commandForm, REQ_BEG_FIELD);
@@ -106,6 +120,61 @@ void ExecuteCommands() {
     }
 }
 
+
+/**
+ * Set Money in display
+ * @param money
+ */
+void updateMoney(DataType money) {
+    currentMoney = money;
+
+    wclear(moneyWindow);
+    wprintw(moneyWindow, "Money: %d", money.integer);
+    wrefresh(moneyWindow);
+}
+
+/**
+ * Set Life in display
+ * @param life
+ */
+void updateLife(DataType life) {
+    currentLife = life;
+
+    wclear(lifeWindow);
+    wprintw(lifeWindow, "Life: %d", life.integer);
+    wrefresh(lifeWindow);
+}
+
+/**
+ * Set Time in display
+ * @param time
+ */
+void updateTime(DataType time) {
+    currentTime = time;
+
+    wclear(timeWindow);
+    wprintw(timeWindow, "Time: %d", time.integer);
+    wrefresh(timeWindow);
+}
+
+/**
+ * Set Player's Name in display
+ * @param name
+ */
+void updateName(DataType name) {
+    playerName = name;
+
+    wclear(nameWindow);
+    wprintw(nameWindow, "%s", name.string);
+    wrefresh(nameWindow);
+}
+
+
+/**
+ * Builds game screen
+ * @param HORZ horizontal columns
+ * @param VERT vertical rows
+ */
 void buildGameScreen(int HORZ, int VERT) {
     int i, j, n;
 
@@ -180,28 +249,4 @@ void buildGameScreen(int HORZ, int VERT) {
             refresh();
         }
     }
-}
-
-void updateMoney(int money) {
-    wclear(moneyWindow);
-    wprintw(moneyWindow, "Money: %d", money);
-    wrefresh(moneyWindow);
-}
-
-void updateLife(int life) {
-    wclear(lifeWindow);
-    wprintw(lifeWindow, "Life: %d", life);
-    wrefresh(lifeWindow);
-}
-
-void updateTime(int time) {
-    wclear(timeWindow);
-    wprintw(timeWindow, "Time: %d", time);
-    wrefresh(timeWindow);
-}
-
-void updateName(char *name) {
-    wclear(nameWindow);
-    wprintw(nameWindow, "%s", name);
-    wrefresh(nameWindow);
 }

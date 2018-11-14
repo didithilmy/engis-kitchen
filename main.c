@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include "manager/intro.h"
 #include "manager/game.h"
+#include "manager/map.h"
 #include "ins_set.h"
+#include "eventbus/eventbus.h"
 
 char command[32];
 
@@ -40,9 +42,12 @@ int main() {
     INS_EXIT = BuildKata("EXIT");
 
     int ret = showIntro();
+    DataType dt;
+
     while(ret != 0) {
         switch (ret) {
             case 1:
+                publish_event(LOAD_GAME);
                 publish_event(START_GAME);
             default:
                 ret = showIntro();
@@ -55,4 +60,5 @@ void initialize_modules() {
     game_manager_init();
     intro_ui_init();
     intro_manager_init();
+    map_manager_init();
 }
