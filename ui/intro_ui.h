@@ -15,11 +15,12 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "display_commons.h"
+#include "ui_commons.h"
 
 extern FIELD *intro_field[2];
 extern FORM  *nameForm;
 
+void intro_ui_init();
 void buildIntroScreen();
 void showNameForm();
 

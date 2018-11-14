@@ -9,10 +9,10 @@
 #define ENGIS_KITCHEN_GAME_H
 
 #include "../ins_set.h"
-#include "../ui/game_display.h"
+#include "../ui/game_ui.h"
 #include "../adt/mesin_kata.h"
 
-void startGame();
+void game_manager_init();
 boolean driver(FORM *form, FIELD **fields, int ch);
 
 #endif //ENGIS_KITCHEN_GAME_H

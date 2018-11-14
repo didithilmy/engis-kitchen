@@ -10,9 +10,9 @@
 #define EVENTBUSTEST_EVENTBUS_H
 
 #include "../adt/mesin_kata.h"
+#include "events.h"
 
 #define MAX_LISTENERS 5
-#define NO_OF_EVENTS 10
 
 typedef union {
     int integer;
@@ -42,39 +42,28 @@ typedef struct {
     int N;
 } BroadcastNPListeners;
 
-typedef struct {
-    BroadcastListeners T[NO_OF_EVENTS];
-    int N;
-} BroadcastEvents;
+typedef union {
+    BroadcastListeners broadcastListeners;
+    Broadcast1PListeners broadcast1PListeners;
+    BroadcastNPListeners broadcastNPListeners;
+    f_getval getvalListener;
+} Listeners;
 
 typedef struct {
-    Broadcast1PListeners T[NO_OF_EVENTS];
+    Listeners T[NO_OF_EVENTS];
     int N;
-} Broadcast1PEvents;
+} Events;
 
-typedef struct {
-    BroadcastNPListeners T[NO_OF_EVENTS];
-    int N;
-} BroadcastNPEvents;
+Events events;
 
-typedef struct {
-    f_getval T[NO_OF_EVENTS];
-    int N;
-} GetvalEvents;
+void listen_event(Event event, f_broadcast f);
+void listen_1p_event(Event event, f_broadcast_1p f);
+void listen_np_event(Event event, f_broadcast_np f);
+void listen_getval_event(Event event, f_getval f);
 
-BroadcastEvents broadcastEvents;
-Broadcast1PEvents broadcast1PEvents;
-BroadcastNPEvents broadcastNPEvents;
-GetvalEvents getvalEvents;
-
-void listen_event(int event, f_broadcast f);
-void listen_1p_event(int event, f_broadcast_1p f);
-void listen_np_event(int event, f_broadcast_np f);
-void listen_getval_event(int event, f_getval f);
-
-void publish_event(int event);
-void publish_1p_event(int event, DataType data);
-void publish_np_event(int event, DataType data, ...);
-DataType publish_getval_event(int event);
+void publish_event(Event event);
+void publish_1p_event(Event event, DataType data);
+void publish_np_event(Event event, DataType data, ...);
+DataType publish_getval_event(Event event);
 
 #endif //EVENTBUSTEST_EVENTBUS_H

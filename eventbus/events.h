@@ -1,0 +1,17 @@
+//
+// Created by Muhammad Aditya Hilmy on 12/11/18.
+//
+
+#ifndef ENGIS_KITCHEN_EVENTS_H
+#define ENGIS_KITCHEN_EVENTS_H
+
+typedef enum {
+    LOAD_GAME, START_GAME, SAVE_GAME, STOP_GAME, EXIT_GAME,
+    UPDATE_NAME, UPDATE_LIFE, UPDATE_TIME, UPDATE_MONEY,
+    COMMAND,
+    LAST
+} Event;
+
+#define NO_OF_EVENTS LAST
+
+#endif //ENGIS_KITCHEN_EVENTS_H

@@ -17,7 +17,11 @@ char command[32];
 Kata CKata;
 boolean EOP;
 
+void initialize_modules();
+
 int main() {
+    initialize_modules();
+
     // Initialize instruction set
     INS_MV_UP = BuildKata("GU");
     INS_MV_DOWN = BuildKata("GD");
@@ -39,9 +43,16 @@ int main() {
     while(ret != 0) {
         switch (ret) {
             case 1:
-                startGame();
+                publish_event(START_GAME);
             default:
                 ret = showIntro();
         }
     }
+}
+
+void initialize_modules() {
+    game_ui_init();
+    game_manager_init();
+    intro_ui_init();
+    intro_manager_init();
 }

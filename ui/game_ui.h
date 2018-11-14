@@ -15,10 +15,10 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "display_commons.h"
+#include "ui_commons.h"
 
 #define MAP_GRID_LINE 3
-#define MAP_GRID_COL 7
+#define MAP_GRID_COL 6
 #define MAP_TOP_OFFSET_LINE 3
 #define SIDE_PANEL_WIDTH 20
 
@@ -27,6 +27,8 @@ extern FORM  *commandForm;
 extern WINDOW **mapWindows;
 extern WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
 extern WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
+
+void game_ui_init();
 
 void buildGameScreen(int HORZ, int VERT);
 

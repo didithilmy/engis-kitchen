@@ -6,9 +6,13 @@
  * @file display.c
  */
 
-#include "../intro_display.h"
+#include "../intro_ui.h"
 
 WINDOW *window;
+
+void intro_ui_init() {
+
+}
 
 void buildIntroScreen() {
     curs_set(0);

@@ -5,6 +5,8 @@
 #ifndef ENGIS_KITCHEN_DISPLAY_COMMONS_H
 #define ENGIS_KITCHEN_DISPLAY_COMMONS_H
 
+#include "../adt/boolean.h"
+#include "../eventbus/eventbus.h"
 #include <ncurses.h>
 #include <form.h>
 #include <panel.h>

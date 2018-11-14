@@ -9,9 +9,10 @@
 #define ENGIS_KITCHEN_INTRO_H
 
 #include "../ins_set.h"
-#include "../ui/intro_display.h"
+#include "../ui/intro_ui.h"
 #include "../adt/mesin_kata.h"
 
+void intro_manager_init();
 int showIntro();
 
 #endif //ENGIS_KITCHEN_INTRO_H

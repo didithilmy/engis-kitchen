@@ -8,6 +8,10 @@
 
 #include "../intro.h"
 
+void intro_manager_init() {
+
+}
+
 int showIntro() {
     int retval = 0;
     boolean keep_requesting = true;
