@@ -10,25 +10,38 @@
 #include "../../adt/mesin_kata.h"
 #include "../../ins_set.h"
 
-boolean driver(FORM *form, FIELD **fields, int ch);
+void driver(FORM *form, FIELD **fields, int ch);
+void ExecuteCommands();
 void onStartGame();
+void onExitGame();
 
 int M = 9, N = 9;
+boolean isGameRunning;
 
 /**
  * Game UI initialization procedure
  */
 void game_ui_init() {
+    isGameRunning = false;
     // Subscribe to events
     listen_event(START_GAME, &onStartGame);
+    listen_event(EXIT_GAME, &onExitGame);
 }
 
+/**
+ * Called when the game is starting
+ */
 void onStartGame() {
+    // Set is game running to true
+    isGameRunning = true;
+
+    // Initiate curses
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
 
+    // Build game screen
     buildGameScreen(N, M);
     updateName("Engi Suengi");
     updateTime(1000);
@@ -40,12 +53,11 @@ void onStartGame() {
 
     /* Loop through to get user requests */
     int ch;
-    while((ch = getch()) != KEY_F(1)) {
-        if(driver(commandForm, field, ch)) {
-            break;
-        } else {
-            refresh();
-        }
+    ch = getch();
+    while(isGameRunning) {
+        driver(commandForm, field, ch);
+        refresh();
+        if(isGameRunning) ch = getch();
     }
 
     /* Un post form and free the memory */
@@ -56,14 +68,19 @@ void onStartGame() {
     endwin();
 }
 
+/**
+ * Called when the game is exiting
+ */
+void onExitGame() {
+    isGameRunning = false;
+}
 
 /**
  * Logical form driver
  * When a case goes unhandled, it calls the ui_driver
  * @return should exit program
  */
-boolean driver(FORM *form, FIELD **fields, int ch) {
-    int i;
+void driver(FORM *form, FIELD **fields, int ch) {
     char *command;
 
     switch (ch) {
@@ -74,24 +91,19 @@ boolean driver(FORM *form, FIELD **fields, int ch) {
             command = field_buffer(fields[0], 0);
             STARTKATA(command);
 
-            // If execute command returns true, should exit program
-            if(ExecuteCommands()) return true;
+            ExecuteCommands();
         default:
             ui_driver(form, fields, ch);
-            return false;
     }
 }
 
 /**
  * Execute command stored in CKata
- * @return should exit program
  */
-boolean ExecuteCommands() {
+void ExecuteCommands() {
     if(CompareKata(CKata, INS_EXIT, false)) {
-        return true;
+        publish_event(EXIT_GAME);
     }
-
-    return false;
 }
 
 void buildGameScreen(int HORZ, int VERT) {

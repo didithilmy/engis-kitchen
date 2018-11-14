@@ -22,7 +22,7 @@ extern FORM  *nameForm;
 
 void intro_ui_init();
 void buildIntroScreen();
-void showNameForm();
+int showIntro();
 
 
 #endif //ENGIS_KITCHEN_INTRO_DISPLAY_H
