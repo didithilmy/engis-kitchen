@@ -3,7 +3,7 @@
 /* Representasi address dengan pointer */
 /* infotype adalah integer */
 
-#include "listlinier.h"
+#include "../listlinier.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -26,6 +26,7 @@ void CreateEmpty (List *L)
 /* F.S. Terbentuk list kosong */
 {
 	First(*L) = Nil;
+    Last(*L) = Nil;
 }
 
 /****************** Manajemen Memori ******************/
@@ -55,16 +56,16 @@ void Dealokasi (address *P)
 }
 
 /****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
-address Search (List L, infotype X)
+//address Search (List L, infotype X)
 /* Mencari apakah ada elemen list dengan Info(P)= X */
 /* Jika ada, mengirimkan address elemen tersebut. */
 /* Jika tidak ada, mengirimkan Nil */
-{
-	/* KAMUS */
+/*{
+	// KAMUS
 	address P;
 	bool Found;
 	
-	/* ALGORITMA */
+	// ALGORITMA
 	P = First(L);
 	Found = false;
 	while ((P != Nil) && (!Found)){
@@ -79,7 +80,7 @@ address Search (List L, infotype X)
 	} else{
 		return Nil;
 	}
-}
+}*/
 
 bool FSearch (List L, address P)
 /* Mencari apakah ada elemen list yang beralamat P */
@@ -102,7 +103,7 @@ bool FSearch (List L, address P)
 	return(Found);	
 }
 
-address SearchPrec (List L, infotype X)
+//address SearchPrec (List L, infotype X)
 /* Mengirimkan address elemen sebelum elemen yang nilainya=X */
 /* Mencari apakah ada elemen list dengan Info(P)=X */
 /* Jika ada, mengirimkan address Prec, dengan Next(Prec)=P dan Info(P)=X. */
@@ -110,12 +111,12 @@ address SearchPrec (List L, infotype X)
 /* Jika P adalah elemen pertama, maka Prec=Nil */
 /* Search dengan spesifikasi seperti ini menghindari */
 /* traversal ulang jika setelah Search akan dilakukan operasi lain */
-{
-	/* KAMUS */
+/*{
+	// KAMUS
 	address Prec, P;
 	bool Found;
 	
-	/* ALGORITMA */
+	// ALGORITMA
 	P = First(L);
 	Found = false;
 	if (Info(P)==X){
@@ -134,7 +135,7 @@ address SearchPrec (List L, infotype X)
 			return (Nil);
 		}
 	}				
-}
+}*/
 
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
@@ -150,8 +151,7 @@ void InsVFirst (List *L, infotype X)
 	/* ALGORTIMA */
 	P = Alokasi(X);
 	if (P != Nil){
-		Next(P) = First(*L);
-		First(*L) = P;
+		InsertFirst(L, P);
 	}
 }
 void InsVLast (List *L, infotype X)
@@ -177,10 +177,9 @@ void DelVFirst (List *L, infotype *X)
 {
 	/* KAMUS */
 	address P;
+
 	/* ALGORITMA */
-	P = First(*L);
-	First(*L) = Next(First(*L));
-	Next(P) = Nil;
+	DelFirst(L, &P);
 	*X = Info(P);
 	Dealokasi(&P);
 }
@@ -189,10 +188,11 @@ void DelVLast (List *L, infotype *X)
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
 {
+    // TODO cek dong pls -didit
 	/* KAMUS */
-	address Last, PrecLast;
+	//address Last, PrecLast;
 	/* ALGORITMA */
-	Last = First(*L);
+	/*Last = First(*L);
 	PrecLast = Nil;
 	while (Next(Last) != Nil){
 		PrecLast = Last;
@@ -203,7 +203,12 @@ void DelVLast (List *L, infotype *X)
 		First(*L) = Nil;
 	} else{
 		Next(PrecLast) = Nil;
-	}
+	}*/
+
+    address P;
+    DelLast(L, &P);
+    *X = Info(P);
+    Dealokasi(&P);
 }
 
 /****************** PRIMITIF BERDASARKAN ALAMAT ******************/
@@ -214,6 +219,11 @@ void InsertFirst (List *L, address P)
 {
 	Next(P) = First(*L);
 	First(*L) = P;
+
+    // Check if Next(P) is Nil. If it is, P must be the last element
+    if(Next(P) == Nil) {
+        Last(*L) = P;
+    }
 }
 void InsertAfter (List *L, address P, address Prec)
 /* I.S. Prec pastilah elemen list dan bukan elemen terakhir, */
@@ -222,6 +232,11 @@ void InsertAfter (List *L, address P, address Prec)
 {
 	Next(P) = Next(Prec);
 	Next(Prec) = P;
+
+    // Check if Next(P) is Nil. If it is, P must be the last element
+    if(Next(P) == Nil) {
+        Last(*L) = P;
+    }
 }
 void InsertLast (List *L, address P)
 /* I.S. Sembarang, P sudah dialokasi  */
@@ -233,11 +248,7 @@ void InsertLast (List *L, address P)
 	if (IsEmpty(*L)){
 		InsertFirst(L, P);
 	} else{
-		Last = First(*L);
-		while (Next(Last) != Nil){
-			Last = Next(Last);
-		}
-		InsertAfter(L, P, Last);
+		InsertAfter(L, P, Last(*L));
 	}
 }
 
@@ -251,17 +262,22 @@ void DelFirst (List *L, address *P)
 	*P = First(*L);
 	First(*L) = Next(First(*L));
 	Next(*P) = Nil;
+
+    // Check if First(*L) is Nil. If it is, L must be empty
+    if(First(*L) == Nil) {
+        Last(*L) = Nil;
+    }
 }
-void DelP (List *L, infotype X)
+//void DelP (List *L, infotype X)
 /* I.S. Sembarang */
 /* F.S. Jika ada elemen list beraddress P, dengan Info(P)=X  */
 /* Maka P dihapus dari list dan di-dealokasi */
 /* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
-{
-	/* KAMUS */
+/*{
+	// KAMUS
 	address P, Prec;
-	/* ALGORITMA */
+	// ALGORITMA
 	if (X == Info(First(*L))){
 		P = First(*L);
 		DelFirst(L, &P);
@@ -277,7 +293,7 @@ void DelP (List *L, infotype X)
 			Dealokasi(&P);
 		}
 	}
-}	
+}	*/
 void DelLast (List *L, address *P)
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */
@@ -297,8 +313,10 @@ void DelLast (List *L, address *P)
 	*P = Last;
 	if (PrecLast == Nil){
 		First(*L) = Nil;
+        Last(*L) = Nil;
 	} else{
 		Next(PrecLast) = Nil;
+        Last(*L) = PrecLast;
 	}
 }
 void DelAfter (List *L, address *Pdel, address Prec)
@@ -309,6 +327,11 @@ void DelAfter (List *L, address *Pdel, address Prec)
 	*Pdel = Next(Prec);
 	Next(Prec) = Next(Next(Prec));
 	Next(*Pdel) = Nil;
+
+    // Check if Next(Prec) is Nil. If it is, Prec must be the last element
+    if(Next(Prec) == Nil) {
+        Last(*L) = Prec;
+    }
 }
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/

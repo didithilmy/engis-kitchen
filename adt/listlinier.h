@@ -1,23 +1,34 @@
 /* File : listlinier.h */
 /* contoh ADT list berkait dengan representasi fisik pointer  */
 /* Representasi address dengan pointer */
-/* infotype adalah integer */
+/* infotype adalah union */
 
 #ifndef listlinier_H
 #define listlinier_H
 
 #include <stdbool.h>
+#include "obj/customer.h"
+#include "obj/order.h"
+#include "obj/food.h"
 
 #define Nil NULL
 
-typedef int infotype;
+typedef union {
+	int integer;
+    Customer *custAddress;
+	Order order;
+	Food food;
+} infotype;
+
 typedef struct tElmtlist *address;
 typedef struct tElmtlist { 
 	infotype info;
 	address next;
 } ElmtList;
+
 typedef struct {
 	address First;
+	address Last;
 } List;
 
 /* Definisi list : */
@@ -27,6 +38,12 @@ typedef struct {
 #define Info(P) (P)->info
 #define Next(P) (P)->next
 #define First(L) ((L).First)
+#define Last(L) ((L).Last)
+
+#define Head(L) First(L)
+#define Tail(L) Last(L)
+#define InfoHead(Q) Info(Head(Q))
+#define InfoTail(Q) Info(Tail(Q))
 
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/
