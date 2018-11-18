@@ -5,7 +5,7 @@
 #define PI 3.14159265
 /* *** DEFINISI PROTOTIPE PRIMITIF *** */
 /* *** Konstruktor membentuk POINT *** */
-POINT MakePOINT (float X, float Y){
+POINT MakePOINT (int X, int Y){
 /* Membentuk sebuah POINT dari komponen-komponennya */
 POINT temp;
 	Absis(temp)=X;
@@ -21,8 +21,8 @@ void BacaPOINT (POINT * P){
    akan membentuk POINT <1,2> */
 /* I.S. Sembarang */
 /* F.S. P terdefinisi */
-	float a,b;
-	scanf("%f %f",&a,&b);
+	int a,b;
+	scanf("%d %d",&a,&b);
 	*P=MakePOINT(a,b);
 }
 void TulisPOINT (POINT P){
@@ -33,7 +33,7 @@ void TulisPOINT (POINT P){
 */
 /* I.S. P terdefinisi */
 /* F.S. P tertulis di layar dengan format "(X,Y)" */                
-printf("(%.2f,%.2f)",Absis(P),Ordinat(P));
+printf("(%d,%d)",Absis(P),Ordinat(P));
 }
 /* *** Kelompok operasi relasional terhadap POINT *** */
 boolean EQ (POINT P1, POINT P2){
@@ -79,7 +79,7 @@ POINT NextY (POINT P){
 /* Mengirim salinan P dengan ordinat ditambah satu */
 	return(MakePOINT(Absis(P),(Ordinat(P)+1)));
 }
-POINT PlusDelta (POINT P, float deltaX, float deltaY){
+POINT PlusDelta (POINT P, int deltaX, int deltaY){
 /* Mengirim salinan P yang absisnya adalah Absis(P) + deltaX dan ordinatnya adalah Ordinat(P) + deltaY */
 	return((MakePOINT((Absis(P)+deltaX),(Ordinat(P)+deltaY))));
 }
@@ -102,7 +102,7 @@ float Panjang (POINT P1, POINT P2){
 /* Menghitung jarak terdekat antara P1 dan P2*/
 	return(sqrt(sqr(Absis(P1)-Absis(P2))+sqr(Ordinat(P1)-Ordinat(P2))));
 }
-void Geser (POINT *P, float deltaX, float deltaY){
+void Geser (POINT *P, int deltaX, int deltaY){
 /* I.S. P terdefinisi */
 /* F.S. P digeser, absisnya sebesar deltaX dan ordinatnya sebesar deltaY */
 	*P=PlusDelta(*P,deltaX,deltaY);
@@ -128,7 +128,7 @@ void Mirror (POINT *P, boolean SbX){
 /* Jika SbX false maka dicerminkan terhadap sumbu Y */
 	*P=MirrorOf(*P,SbX);
 }
-void Putar (POINT *P, float Sudut){
+void Putar (POINT *P, int Sudut){
 /* I.S. P terdefinisi */
 /* F.S. P digeser sebesar Sudut derajat dengan sumbu titik (0,0) */
 	float temp;
