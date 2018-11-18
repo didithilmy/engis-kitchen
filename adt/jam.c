@@ -1,5 +1,5 @@
 /* File: jam.h */
-/* Tanggal: 28 Agustus 2016 */
+
 /* Definisi ADT JAM */
 #include <stdio.h>
 #include "jam.h"
