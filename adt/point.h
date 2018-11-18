@@ -6,7 +6,7 @@
 
 #include "boolean.h"
 
-typedef struct { 
+typedef struct {
 	int X; /* absis   */
 	int Y; /* ordinat */
 } POINT;
@@ -14,14 +14,14 @@ typedef struct {
 /* *** Notasi Akses: Selektor POINT *** */
 #define Absis(P) (P).X
 #define Ordinat(P) (P).Y
-        
+
 /* *** DEFINISI PROTOTIPE PRIMITIF *** */
 /* *** Konstruktor membentuk POINT *** */
 POINT MakePOINT (int X, int Y);
 /* Membentuk sebuah POINT dari komponen-komponennya */
 
-/* *** KELOMPOK Interaksi dengan I/O device, BACA/TULIS  *** */                                                 
-void BacaPOINT (POINT * P); 
+/* *** KELOMPOK Interaksi dengan I/O device, BACA/TULIS  *** */
+void BacaPOINT (POINT * P);
 /* Membaca nilai absis dan ordinat dari keyboard dan membentuk 
    POINT P berdasarkan dari nilai absis dan ordinat tersebut */
 /* Komponen X dan Y dibaca dalam 1 baris, dipisahkan 1 buah spasi */
@@ -36,7 +36,7 @@ void TulisPOINT (POINT P);
    Output X dan Y harus dituliskan dalam bilangan riil dengan 2 angka di belakang koma.
 */
 /* I.S. P terdefinisi */
-/* F.S. P tertulis di layar dengan format "(X,Y)" */                
+/* F.S. P tertulis di layar dengan format "(X,Y)" */
 
 /* *** Kelompok operasi relasional terhadap POINT *** */
 boolean EQ (POINT P1, POINT P2);
@@ -56,9 +56,9 @@ int Kuadran (POINT P);
 /* Prekondisi : P bukan titik origin, */
 /*              dan P tidak terletak di salah satu sumbu */
 
-/* *** KELOMPOK OPERASI LAIN TERHADAP TYPE *** */                           
+/* *** KELOMPOK OPERASI LAIN TERHADAP TYPE *** */
 POINT NextX (POINT P);
-/* Mengirim salinan P dengan absis ditambah satu */              
+/* Mengirim salinan P dengan absis ditambah satu */
 POINT NextY (POINT P);
 /* Mengirim salinan P dengan ordinat ditambah satu */
 POINT PlusDelta (POINT P, int deltaX, int deltaY);

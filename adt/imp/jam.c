@@ -1,5 +1,5 @@
 /* File: jam.h */
-/* Tanggal: 28 Agustus 2016 */
+
 /* Definisi ADT JAM */
 #include <stdio.h>
 #include "../jam.h"
@@ -12,7 +12,7 @@ boolean IsJAMValid (int H, int M, int S){
 /* Mengirim true  jika H,M,S dapat membentuk J yang valid */
 /* dipakai untuk mentest SEBELUM membentuk sebuah Jam */
 	return (H<24 && H>=0 && M < 60 && M>=0 && S<60 && S>=0);
-	}
+}
 /* *** Konstruktor: Membentuk sebuah JAM dari komponen-komponennya *** */
 JAM MakeJAM (int HH, int MM, int SS){
 /* Membentuk sebuah JAM dari komponen-komponennya yang valid */
@@ -35,25 +35,25 @@ void BacaJAM (JAM * J){
    dalam satu baris, masing-masing dipisahkan 1 spasi, diakhiri enter. */
 /* Jika JAM tidak valid maka diberikan pesan: "Jam tidak valid", dan pembacaan
    diulangi hingga didapatkan jam yang valid. */
-/* Contoh: 
+/* Contoh:
    60 3 4
    Jam tidak valid
    1 3 4
    --> akan terbentuk JAM <1,3,4> */
-   int a,b,c;
-   do{
-	scanf("%d %d %d",&a,&b,&c);
-	if (IsJAMValid(a,b,c)==false)
-		printf("Jam tidak valid\n");
-   }while (IsJAMValid(a,b,c)==false);
-   *J = MakeJAM(a,b,c);
-  }
+	int a,b,c;
+	do{
+		scanf("%d %d %d",&a,&b,&c);
+		if (IsJAMValid(a,b,c)==false)
+			printf("Jam tidak valid\n");
+	}while (IsJAMValid(a,b,c)==false);
+	*J = MakeJAM(a,b,c);
+}
 void TulisJAM (JAM J){
 /* I.S. : J sembarang */
 /* F.S. :   Nilai J ditulis dg format HH:MM:SS */
 /* Proses : menulis nilai setiap komponen J ke layar dalam format HH:MM:SS
    tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/
-   printf("%d:%d:%d",Hour(J),Minute(J),Second(J));
+	printf("%d:%d:%d",Hour(J),Minute(J),Second(J));
 }
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -66,13 +66,13 @@ long JAMToDetik (JAM J){
 }
 JAM DetikToJAM (long N){
 /* Mengirim  konversi detik ke JAM */
-/* Catatan: Jika N >= 86400, maka harus dikonversi dulu menjadi jumlah detik yang 
-   mewakili jumlah detik yang mungkin dalam 1 hari, yaitu dengan rumus: 
+/* Catatan: Jika N >= 86400, maka harus dikonversi dulu menjadi jumlah detik yang
+   mewakili jumlah detik yang mungkin dalam 1 hari, yaitu dengan rumus:
    N1 = N mod 86400, baru N1 dikonversi menjadi JAM */
 	long N1;
 	N1 = N % 86400;
 	return (MakeJAM((N1 / 3600),((N1 % 3600) /60),((N1%3600) %60)));
-   }
+}
 /* ***************************************************************** */
 /* KELOMPOK OPERASI TERHADAP TYPE                                    */
 /* ***************************************************************** */
@@ -113,7 +113,7 @@ JAM PrevDetik (JAM J){
 }
 JAM PrevNDetik (JAM J, int N){
 /* Mengirim N detik sebelum J dalam bentuk JAM */
-		long temp,tempn;
+	long temp,tempn;
 	temp=JAMToDetik(J);
 	tempn=N%86400;
 	if (temp>(N-1))

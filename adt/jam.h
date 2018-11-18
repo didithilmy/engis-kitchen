@@ -8,7 +8,7 @@
 #include "boolean.h"
 
 /* *** Definisi TYPE JAM <HH:MM:SS> *** */
-typedef struct { 
+typedef struct {
 	int HH; /* integer [0..23] */
 	int MM; /* integer [0..59] */
 	int SS; /* integer [0..59] */
@@ -50,12 +50,12 @@ void BacaJAM (JAM * J);
    Jam tidak valid
    1 3 4
    --> akan terbentuk JAM <1,3,4> */
-   
+
 void TulisJAM (JAM J);
 /* I.S. : J sembarang */
 /* F.S. :   Nilai J ditulis dg format HH:MM:SS */
 /* Proses : menulis nilai setiap komponen J ke layar dalam format HH:MM:SS
-   tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/ 
+   tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/
 
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -65,7 +65,7 @@ long JAMToDetik (JAM J);
 /* Rumus : detik = 3600*HH + 60*MM + SS */
 /* Nilai maksimum = 3600*23+59*60+59 */
 
-JAM DetikToJAM (long N); 
+JAM DetikToJAM (long N);
 /* Mengirim  konversi detik ke JAM */
 /* Catatan: Jika N >= 86400, maka harus dikonversi dulu menjadi jumlah detik yang 
    mewakili jumlah detik yang mungkin dalam 1 hari, yaitu dengan rumus: 
