@@ -9,6 +9,8 @@
 #include "../game_ui.h"
 #include "../../ins_set.h"
 #include "../../eventbus/eventbus.h"
+#include "../../adt/obj/meja.h"
+#include "../../adt/point.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands();
@@ -23,8 +25,12 @@ void updateName(DataType name);
 // Global variables
 
 boolean isGameRunning;
-
 DataType playerName, currentMoney, currentTime, currentLife;
+int MapWidth, MapHeight;
+struct {
+    WINDOW *T[200];
+    int N;
+} TabWindow;
 
 /**
  * Game UI initialization procedure
@@ -54,13 +60,18 @@ void onStartGame() {
     keypad(stdscr, TRUE);
 
     // Build game screen
-    buildGameScreen(publish_getval_event(GET_MAP_HEIGHT).integer, publish_getval_event(GET_MAP_WIDTH).integer);
+    MapWidth = publish_getval_event(GET_MAP_WIDTH).integer;
+    MapHeight = publish_getval_event(GET_MAP_HEIGHT).integer;
+    buildGameScreen(MapHeight, MapWidth);
 
     // Set parameters
     updateName(playerName);
     updateMoney(currentMoney);
     updateLife(currentLife);
     updateTime(currentTime);
+
+    // Load Meja map
+    loadMapMeja(publish_getval_event(GET_MAP_ARRAY).tabMeja);
 
     // Move cursor to beginning of field
     form_driver(commandForm, REQ_BEG_FIELD);
@@ -183,6 +194,44 @@ void updateName(DataType name) {
     wrefresh(nameWindow);
 }
 
+/**
+ * Update the character in the respective window coordinate
+ * @param x
+ * @param y
+ * @param C
+ */
+void updateMapWindowCharacter(int x, int y, char *C) {
+    int aIndex = (((y-1) * MapWidth) + x);
+    mvwprintw(TabWindow.T[aIndex], 0, 1, C);
+    wrefresh(TabWindow.T[aIndex]);
+}
+
+void loadMapMeja(TabMeja T) {
+    int i;
+    wprintw(foodStackWindow, "Load Map Meja.. %d\n", T.N);
+    wrefresh(foodStackWindow);
+
+    for(i = 1; i <= T.N; i++) {
+        wprintw(foodStackWindow, "Printing..\n");
+        wrefresh(foodStackWindow);
+
+        Meja meja = T.T[i];
+
+        // Set the table number in the coord matrix
+        updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y, "A");
+
+        // Draw the empty chair on the surrounding
+        // Draw the left and right chair
+        updateMapWindowCharacter(meja.coordinate.X - 1, meja.coordinate.Y, "X");
+        updateMapWindowCharacter(meja.coordinate.X + 1, meja.coordinate.Y, "X");
+
+        // Draw the left and right chair, if capacity is 4
+        if(meja.capacity == 4) {
+            updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, "X");
+            updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, "X");
+        }
+    }
+}
 
 /**
  * Builds game screen
@@ -201,8 +250,8 @@ void buildGameScreen(int HORZ, int VERT) {
 
     // TODO add delay to allow the window size to stabilize
 
-    WINDOW *mapWin[(HORZ*VERT) + 1];
-    mapWindows = mapWin;
+    TabWindow.N = HORZ * VERT;
+    //WINDOW *mapWin[(HORZ*VERT)];
 
     // Build command input
     field[0] = new_field(1, 50, MAP_TOP_OFFSET_LINE + HEIGHT+2, 11, 0, 0);
@@ -228,6 +277,7 @@ void buildGameScreen(int HORZ, int VERT) {
     // Initiate food stack panel
     printBorder(3, 3 + (HEIGHT), WIDTH - SIDE_PANEL_WIDTH, WIDTH);
     mvprintw(4, WIDTH - SIDE_PANEL_WIDTH + 1, "%s", "Food Stack");
+    foodStackWindow = newwin(HEIGHT - 3, SIDE_PANEL_WIDTH - 1, 6, WIDTH - SIDE_PANEL_WIDTH + 1);
 
     // Remaining width
     int remWidth = WIDTH - (SIDE_PANEL_WIDTH + 1);
@@ -259,7 +309,7 @@ void buildGameScreen(int HORZ, int VERT) {
         for(j = 0; j < HORZ; j++) {
             n++;
             printBorder(MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE), MAP_TOP_OFFSET_LINE + ((i+1)*MAP_GRID_LINE), (SIDE_PANEL_WIDTH + 1) + (j*MAP_GRID_COL), (SIDE_PANEL_WIDTH + 1) + ((j+1)*MAP_GRID_COL));
-            mapWindows[n] = newwin(MAP_GRID_LINE - 2, MAP_GRID_COL - 2, MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE) + 1, (SIDE_PANEL_WIDTH + 1) + (j*MAP_GRID_COL) + 1);
+            TabWindow.T[n] = newwin(MAP_GRID_LINE - 1, MAP_GRID_COL - 1, MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE) + 1, (SIDE_PANEL_WIDTH + 1) + (j*MAP_GRID_COL) + 1);
             refresh();
         }
     }

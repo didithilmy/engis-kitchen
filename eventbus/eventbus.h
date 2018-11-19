@@ -11,6 +11,7 @@
 
 #include "../adt/mesin_kata.h"
 #include "events.h"
+#include "../adt/obj/meja.h"
 
 #define MAX_LISTENERS 5
 
@@ -20,6 +21,8 @@ typedef union {
     char *string;
     Kata kata;
     Commands cmd;
+    Meja meja;
+    TabMeja tabMeja;
 } DataType;
 
 

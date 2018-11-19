@@ -38,5 +38,6 @@ WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
 void game_ui_init();
 
 void buildGameScreen(int HORZ, int VERT);
+void loadMapMeja(TabMeja T);
 
 #endif //ENGIS_KITCHEN_DISPLAY_H
