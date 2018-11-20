@@ -4,8 +4,8 @@
 #define MATRIKS_H
 
 #include "boolean.h"
-#include "food.h"
-#include "meja.h"
+#include "obj/food.h"
+#include "obj/meja.h"
 #include <stddef.h>
 
 /* Ukuran minimum dan maksimum baris dan kolom */
