@@ -4,8 +4,8 @@
 #define MATRIKS_H
 
 #include "boolean.h"
-#include "food.h"
-#include "meja.h"
+#include "obj/food.h"
+#include "obj/meja.h"
 #include <stddef.h>
 
 /* Ukuran minimum dan maksimum baris dan kolom */
@@ -62,7 +62,7 @@ indeks GetLastIdxKol (MATRIKS M);
 
 
 /* ********** KELOMPOK BACA/TULIS ********** */ 
-void EditMATRIKS (MATRIKS * M, MatriksType TipeMatriks, Food * food, Meja * meja , boolean IsPhysical);
+void EditMATRIKS (int i, int j,MATRIKS * M, MatriksType TipeMatriks, Food * food, Meja * meja , boolean IsPhysical);
 /* I.S. IsIdxValid(NB,NK) */ 
 /* F.S. M terdefinisi nilai elemen efektifnya, berukuran NB x NK */
 /* Proses: Melakukan MakeMATRIKS(M,NB,NK) dan mengisi nilai efektifnya */
