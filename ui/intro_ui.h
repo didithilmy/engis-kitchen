@@ -20,6 +20,9 @@
 extern FIELD *intro_field[2];
 extern FORM  *nameForm;
 
+FIELD *intro_field[2];
+FORM  *nameForm;
+
 void intro_ui_init();
 void buildIntroScreen();
 int showIntro();
