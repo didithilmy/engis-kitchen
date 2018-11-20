@@ -40,6 +40,7 @@ int main() {
     INS_SAVE = BuildKata("SAVE");
     INS_LOAD = BuildKata("LOAD");
     INS_EXIT = BuildKata("EXIT");
+    INS_NEW = BuildKata("NEW");
 
     int ret = showIntro();
     DataType dt;
