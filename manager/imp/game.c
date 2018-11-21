@@ -13,6 +13,7 @@ void save_game();
 void do_command(DataType command);
 
 // Variables of game parameters
+int current_time;
 
 void game_manager_init() {
     listen_event(LOAD_GAME, &load_game);
@@ -28,8 +29,10 @@ void load_game() {
     // TODO read files and load
     DataType name, time, life, money;
 
+    current_time = 0;
+
     name.string = "Riza Satria P.";
-    time.integer = 0;
+    time.integer = current_time;
     life.integer = 0;
     money.integer = 1000;
 
@@ -54,6 +57,15 @@ void do_command(DataType command) {
     // TODO keeps track of command, if necessary
     switch (cmd) {
         case CMD_GU:
+        case CMD_GD:
+        case CMD_GR:
+        case CMD_GL:
+            current_time++;
+
+            DataType dt;
+            dt.integer = current_time;
+            publish_1p_event(SET_TIME, dt);
+
             break;
         default:
             break;

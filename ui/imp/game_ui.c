@@ -22,6 +22,9 @@ void updateLife(DataType life);
 void updateTime(DataType time);
 void updateName(DataType name);
 
+boolean isMoveLegal(POINT point);
+void movePlayer(POINT moveTo);
+
 // Global variables
 
 boolean isGameRunning;
@@ -31,6 +34,8 @@ struct {
     WINDOW *T[200];
     int N;
 } TabWindow;
+
+POINT player_position;
 
 /**
  * Game UI initialization procedure
@@ -63,6 +68,9 @@ void onStartGame() {
     MapWidth = publish_getval_event(GET_MAP_WIDTH).integer;
     MapHeight = publish_getval_event(GET_MAP_HEIGHT).integer;
     buildGameScreen(MapHeight, MapWidth);
+
+    // Set player cursor TODO change
+    player_position = MakePOINT(1, 1);
 
     // Set parameters
     updateName(playerName);
@@ -127,21 +135,49 @@ void driver(FORM *form, FIELD **fields, int ch) {
  */
 void ExecuteCommands() {
     DataType dt;
+    POINT point;
 
     if(CompareKata(CKata, INS_EXIT, false)) {
         publish_event(EXIT_GAME);
     } else if(CompareKata(CKata, INS_MV_UP, false)) {
-        dt.cmd = CMD_GU;
-        publish_1p_event(COMMAND, dt);
+        point.X = player_position.X;
+        point.Y = player_position.Y - 1;
+        if(isMoveLegal(point)) {
+            movePlayer(point);
+
+            dt.cmd = CMD_GU;
+            publish_1p_event(COMMAND, dt);
+        }
     } else if(CompareKata(CKata, INS_MV_DOWN, false)) {
-        dt.cmd = CMD_GD;
-        publish_1p_event(COMMAND, dt);
+        point.X = player_position.X;
+        point.Y = player_position.Y + 1;
+
+        if(isMoveLegal(point)) {
+            movePlayer(point);
+
+            dt.cmd = CMD_GD;
+            publish_1p_event(COMMAND, dt);
+        }
     } else if(CompareKata(CKata, INS_MV_LEFT, false)) {
-        dt.cmd = CMD_GL;
-        publish_1p_event(COMMAND, dt);
+        point.X = player_position.X - 1;
+        point.Y = player_position.Y;
+
+        if(isMoveLegal(point)) {
+            movePlayer(point);
+
+            dt.cmd = CMD_GL;
+            publish_1p_event(COMMAND, dt);
+        }
     } else if(CompareKata(CKata, INS_MV_RIGHT, false)) {
-        dt.cmd = CMD_GR;
-        publish_1p_event(COMMAND, dt);
+        point.X = player_position.X + 1;
+        point.Y = player_position.Y;
+
+        if(isMoveLegal(point)) {
+            movePlayer(point);
+
+            dt.cmd = CMD_GR;
+            publish_1p_event(COMMAND, dt);
+        }
     }
 }
 
@@ -206,6 +242,10 @@ void updateMapWindowCharacter(int x, int y, char *C) {
     wrefresh(TabWindow.T[aIndex]);
 }
 
+/**
+ * Load map meja
+ * @param T TabMeja
+ */
 void loadMapMeja(TabMeja T) {
     int i;
     wprintw(foodStackWindow, "Load Map Meja.. %d\n", T.N);
@@ -217,19 +257,52 @@ void loadMapMeja(TabMeja T) {
 
         Meja meja = T.T[i];
 
+        char str[4];
+        sprintf(str, "%d", meja.tableNo);
         // Set the table number in the coord matrix
-        updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y, "A");
+        updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y, str);
 
         // Draw the empty chair on the surrounding
         // Draw the left and right chair
-        updateMapWindowCharacter(meja.coordinate.X - 1, meja.coordinate.Y, "X");
-        updateMapWindowCharacter(meja.coordinate.X + 1, meja.coordinate.Y, "X");
+        updateMapWindowCharacter(meja.coordinate.X - 1, meja.coordinate.Y, meja.custAddress == NULL ? "X" : "C");
+        updateMapWindowCharacter(meja.coordinate.X + 1, meja.coordinate.Y, meja.custAddress == NULL ? "X" : "C");
 
         // Draw the left and right chair, if capacity is 4
         if(meja.capacity == 4) {
-            updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, "X");
-            updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, "X");
+            if(meja.custAddress == NULL)  {
+                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, "X");
+                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, "X");
+            } else {
+                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, CustomerPersons(meja.custAddress) == 4 ? "C" : "X");
+                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, CustomerPersons(meja.custAddress) == 4 ? "C" : "X");
+            }
         }
+    }
+}
+
+/**
+ * Determine if the move is legal
+ * @param point next point
+ * @return is move legal
+ */
+boolean isMoveLegal(POINT point) {
+    return (point.X > 0 && point.Y > 0) && (point.X <= MapWidth && point.Y <= MapHeight);
+}
+
+/**
+ * Move cursor to
+ * @param moveTo
+ */
+void movePlayer(POINT moveTo) {
+    if(isMoveLegal(moveTo)) {
+        // Clear previous point
+        updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
+
+        // Set new point
+        updateMapWindowCharacter(moveTo.X, moveTo.Y, "P");
+
+        player_position.X = moveTo.X;
+        player_position.Y = moveTo.Y;
     }
 }
 
