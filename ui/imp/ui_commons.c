@@ -126,6 +126,9 @@ void printBorder(int y1, int y2, int x1, int x2) {
 }
 
 void wPrintBorder(WINDOW *win, int y1, int y2, int x1, int x2) {
+    chtype ch;
+    chtype cch;
+
     mvwhline(win, y1, x1, 0, x2-x1);
     mvwhline(win, y2, x1, 0, x2-x1);
     mvwvline(win, y1, x1, 0, y2-y1);
@@ -134,6 +137,67 @@ void wPrintBorder(WINDOW *win, int y1, int y2, int x1, int x2) {
     mvwaddch(win, y2, x1, ACS_LLCORNER);
     mvwaddch(win, y1, x2, ACS_URCORNER);
     mvwaddch(win, y2, x2, ACS_LRCORNER);
+
+    // Handle upper-left corner
+    cch = mvwinch(win, y1, x1);
+    if(cch == ACS_LRCORNER || cch == ACS_BTEE || cch == ACS_RTEE) {
+        ch = ACS_PLUS;
+    } else if(cch == ACS_LLCORNER) {
+        ch = ACS_LTEE;
+    } else if(cch == ACS_URCORNER) {
+        ch = ACS_TTEE;
+    } else if(cch == ACS_LTEE || cch == ACS_TTEE || cch == ACS_PLUS) {
+        ch = cch;
+    } else {
+        ch = ACS_ULCORNER;
+    }
+
+    mvwaddch(win, y1, x1, ch);
+
+    // Handle lower-left corner
+    cch = mvwinch(win, y2, x1);
+    if(cch == ACS_URCORNER || cch == ACS_TTEE || cch == ACS_RTEE) {
+        ch = ACS_PLUS;
+    } else if(cch == ACS_LRCORNER) {
+        ch = ACS_BTEE;
+    } else if(cch == ACS_ULCORNER) {
+        ch = ACS_LTEE;
+    } else if(cch == ACS_BTEE || cch == ACS_LTEE || cch == ACS_PLUS) {
+        ch = cch;
+    } else {
+        ch = ACS_LLCORNER;
+    }
+    mvwaddch(win, y2, x1, ch);
+
+    // Handle upper-right corner
+    cch = mvwinch(win, y1, x2);
+    if(cch == ACS_LLCORNER || cch == ACS_BTEE || cch == ACS_LTEE) {
+        ch = ACS_PLUS;
+    } else if(cch == ACS_ULCORNER) {
+        ch = ACS_TTEE;
+    } else if(cch == ACS_LRCORNER) {
+        ch = ACS_RTEE;
+    } else if(cch == ACS_TTEE || cch == ACS_RTEE || cch == ACS_PLUS) {
+        ch = cch;
+    } else {
+        ch = ACS_URCORNER;
+    }
+    mvwaddch(win, y1, x2, ch);
+
+    // Handle lower-right corner
+    cch = mvwinch(win, y2, x2);
+    if(cch == ACS_ULCORNER || cch == ACS_TTEE || cch == ACS_LTEE) {
+        ch = ACS_PLUS;
+    } else if(cch == ACS_LLCORNER) {
+        ch = ACS_BTEE;
+    } else if(cch == ACS_URCORNER) {
+        ch = ACS_RTEE;
+    } else if(cch == ACS_BTEE || cch == ACS_RTEE || cch == ACS_PLUS) {
+        ch = cch;
+    } else {
+        ch = ACS_LRCORNER;
+    }
+    mvwaddch(win, y2, x2, ch);
 }
 
 void resizeTerminalWindow(int width, int height) {

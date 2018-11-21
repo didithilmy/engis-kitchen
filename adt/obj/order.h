@@ -7,10 +7,15 @@
 
 #include "../mesin_kata.h"
 #include "meja.h"
+#include "food.h" 
+
 
 typedef struct tOrder {
-    Kata foodName;
+    Food *food;
     Meja *meja;
 } Order;
+
+Order CreateOrder (Food *FoodName , Meja *meja);
+/*Fungsi untuk melakukan order*/
 
 #endif //ENGIS_KITCHEN_ORDER_H

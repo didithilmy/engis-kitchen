@@ -33,7 +33,7 @@ void load_game() {
     life.integer = 0;
     money.integer = 1000;
 
-    publish_1p_event(SET_NAME, name);
+    //publish_1p_event(SET_NAME, name);
     publish_1p_event(SET_TIME, time);
     publish_1p_event(SET_LIFE, life);
     publish_1p_event(SET_MONEY, money);

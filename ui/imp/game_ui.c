@@ -251,7 +251,6 @@ void buildGameScreen(int HORZ, int VERT) {
     // TODO add delay to allow the window size to stabilize
 
     TabWindow.N = HORZ * VERT;
-    //WINDOW *mapWin[(HORZ*VERT)];
 
     // Build command input
     field[0] = new_field(1, 50, MAP_TOP_OFFSET_LINE + HEIGHT+2, 11, 0, 0);
