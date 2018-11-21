@@ -8,13 +8,10 @@
 
 #include "../game_ui.h"
 #include "../../ins_set.h"
-#include "../../eventbus/eventbus.h"
-#include "../../adt/obj/meja.h"
-#include "../../adt/point.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands();
-void onStartGame();
+void postStartGame();
 void onExitGame();
 
 void updateMoney(DataType money);
@@ -26,9 +23,9 @@ boolean isMoveLegal(POINT point);
 void movePlayer(POINT moveTo);
 
 // Global variables
-
+DataType uiCMoney, uiCLife, uiCTime, uiCName;
 boolean isGameRunning;
-DataType playerName, currentMoney, currentTime, currentLife;
+
 int MapWidth, MapHeight;
 struct {
     WINDOW *T[200];
@@ -43,18 +40,18 @@ POINT player_position;
 void game_ui_init() {
     isGameRunning = false;
     // Subscribe to events
-    listen_event(START_GAME, &onStartGame);
+    listen_post_event(START_GAME, &postStartGame);
     listen_event(EXIT_GAME, &onExitGame);
-    listen_1p_event(SET_NAME, &updateName);
-    listen_1p_event(SET_LIFE, &updateLife);
-    listen_1p_event(SET_TIME, &updateTime);
-    listen_1p_event(SET_MONEY, &updateMoney);
+    listen_1p_event(UI_SET_NAME, &updateName);
+    listen_1p_event(UI_SET_LIFE, &updateLife);
+    listen_1p_event(UI_SET_TIME, &updateTime);
+    listen_1p_event(UI_SET_MONEY, &updateMoney);
 }
 
 /**
- * Called when the game is starting
+ * Called when the game is started (post event)
  */
-void onStartGame() {
+void postStartGame() {
     // Set is game running to true
     isGameRunning = true;
 
@@ -69,14 +66,14 @@ void onStartGame() {
     MapHeight = publish_getval_event(GET_MAP_HEIGHT).integer;
     buildGameScreen(MapHeight, MapWidth);
 
+    // Set name
+    updateName(uiCName);
+    updateTime(uiCTime);
+    updateLife(uiCLife);
+    updateMoney(uiCMoney);
+
     // Set player cursor TODO change
     player_position = MakePOINT(1, 1);
-
-    // Set parameters
-    updateName(playerName);
-    updateMoney(currentMoney);
-    updateLife(currentLife);
-    updateTime(currentTime);
 
     // Load Meja map
     loadMapMeja(publish_getval_event(GET_MAP_ARRAY).tabMeja);
@@ -187,11 +184,13 @@ void ExecuteCommands() {
  * @param money
  */
 void updateMoney(DataType money) {
-    currentMoney = money;
+    uiCMoney = money;
 
-    wclear(moneyWindow);
-    wprintw(moneyWindow, "Money: %d", money.integer);
-    wrefresh(moneyWindow);
+    if(isGameRunning) {
+        wclear(moneyWindow);
+        wprintw(moneyWindow, "Money: %d", money.integer);
+        wrefresh(moneyWindow);
+    }
 }
 
 /**
@@ -199,11 +198,13 @@ void updateMoney(DataType money) {
  * @param life
  */
 void updateLife(DataType life) {
-    currentLife = life;
+    uiCLife = life;
 
-    wclear(lifeWindow);
-    wprintw(lifeWindow, "Life: %d", life.integer);
-    wrefresh(lifeWindow);
+    if(isGameRunning) {
+        wclear(lifeWindow);
+        wprintw(lifeWindow, "Life: %d", life.integer);
+        wrefresh(lifeWindow);
+    }
 }
 
 /**
@@ -211,11 +212,13 @@ void updateLife(DataType life) {
  * @param time
  */
 void updateTime(DataType time) {
-    currentTime = time;
+    uiCTime = time;
 
-    wclear(timeWindow);
-    wprintw(timeWindow, "Time: %d", time.integer);
-    wrefresh(timeWindow);
+    if(isGameRunning) {
+        wclear(timeWindow);
+        wprintw(timeWindow, "Time: %d", time.integer);
+        wrefresh(timeWindow);
+    }
 }
 
 /**
@@ -223,11 +226,19 @@ void updateTime(DataType time) {
  * @param name
  */
 void updateName(DataType name) {
-    playerName = name;
+    int i;
 
-    wclear(nameWindow);
-    wprintw(nameWindow, "%s", name.string);
-    wrefresh(nameWindow);
+    uiCName = name;
+
+    Kata kata = name.kata;
+
+    if(isGameRunning) {
+        wclear(nameWindow);
+        for(i = 1; i <= kata.Length; i++) {
+            wprintw(nameWindow, "%c", kata.TabKata[i]);
+        }
+        wrefresh(nameWindow);
+    }
 }
 
 /**

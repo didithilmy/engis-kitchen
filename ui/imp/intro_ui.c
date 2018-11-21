@@ -109,7 +109,7 @@ void setName() {
     dt.kata = CKata;
     is_prompting_name = false;
     mvprintw(20, 1, "%10s", "Command: ");
-    //TODO WTF publish_1p_event(SET_NAME, dt);
+    publish_1p_event(NEW_GAME, dt);
 
     keep_requesting = false;
     retval = 1;

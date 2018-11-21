@@ -28,28 +28,23 @@ typedef union {
 
 typedef void (*f_broadcast)();
 typedef void (*f_broadcast_1p)(DataType);
-typedef void (*f_broadcast_np)(DataType, ...);
 typedef DataType (*f_getval)();
 
 typedef struct {
     f_broadcast T[MAX_LISTENERS + 1];
-    int N;
+    f_broadcast postT[MAX_LISTENERS + 1];
+    int N, NT;
 } BroadcastListeners;
 
 typedef struct {
     f_broadcast_1p T[MAX_LISTENERS + 1];
-    int N;
+    f_broadcast_1p postT[MAX_LISTENERS + 1];
+    int N, NT;
 } Broadcast1PListeners;
-
-typedef struct {
-    f_broadcast_np T[MAX_LISTENERS + 1];
-    int N;
-} BroadcastNPListeners;
 
 typedef union {
     BroadcastListeners broadcastListeners;
     Broadcast1PListeners broadcast1PListeners;
-    BroadcastNPListeners broadcastNPListeners;
     f_getval getvalListener;
 } Listeners;
 
@@ -60,14 +55,15 @@ typedef struct {
 
 Events events;
 
+void init_event_bus();
 void listen_event(Event event, f_broadcast f);
+void listen_post_event(Event event, f_broadcast f);
 void listen_1p_event(Event event, f_broadcast_1p f);
-void listen_np_event(Event event, f_broadcast_np f);
+void listen_1p_post_event(Event event, f_broadcast_1p f);
 void listen_getval_event(Event event, f_getval f);
 
 void publish_event(Event event);
 void publish_1p_event(Event event, DataType data);
-void publish_np_event(Event event, DataType data, ...);
 DataType publish_getval_event(Event event);
 
 #endif //EVENTBUSTEST_EVENTBUS_H

@@ -48,7 +48,7 @@ int main() {
     while(ret != 0) {
         switch (ret) {
             case 1:
-                publish_event(LOAD_GAME);
+                //publish_event(LOAD_GAME);
                 publish_event(START_GAME);
             default:
                 ret = showIntro();
@@ -57,6 +57,7 @@ int main() {
 }
 
 void initialize_modules() {
+    init_event_bus();
     game_ui_init();
     game_manager_init();
     intro_ui_init();

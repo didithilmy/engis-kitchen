@@ -7,18 +7,27 @@
  */
 
 #include "../game.h"
+#include "../../eventbus/eventbus.h"
 
 void load_game();
 void save_game();
+void start_game();
+void post_start_game();
 void do_command(DataType command);
+void new_game(DataType name);
 
 // Variables of game parameters
-int current_time;
+GameState currentGame;
 
 void game_manager_init() {
+    listen_event(NEW_GAME, &new_game);
     listen_event(LOAD_GAME, &load_game);
     listen_event(SAVE_GAME, &save_game);
-    listen_event(COMMAND, &do_command);
+
+    listen_event(START_GAME, &start_game);
+
+    listen_1p_event(COMMAND, &do_command);
+    listen_1p_event(NEW_GAME, &new_game);
 }
 
 /**
@@ -27,21 +36,11 @@ void game_manager_init() {
  */
 void load_game() {
     // TODO read files and load
-    DataType name, time, life, money;
-
-    current_time = 0;
-
-    name.string = "Riza Satria P.";
-    time.integer = current_time;
-    life.integer = 0;
-    money.integer = 1000;
-
-    //publish_1p_event(SET_NAME, name);
-    publish_1p_event(SET_TIME, time);
-    publish_1p_event(SET_LIFE, life);
-    publish_1p_event(SET_MONEY, money);
+    currentGame.time = 0;
+    currentGame.life = 0;
+    currentGame.money = 1000;
+    currentGame.player_name = BuildKata("Player Lolz");
 }
-
 
 /**
  * Saves game to file
@@ -49,6 +48,25 @@ void load_game() {
  */
 void save_game() {
     // TODO write file
+}
+
+/**
+ * Starts game
+ * Called when a start game instruction is requested
+ */
+void start_game() {
+    // TODO read files and load
+    DataType name, time, life, money;
+
+    name.kata = currentGame.player_name;
+    time.integer = currentGame.time;
+    life.integer = currentGame.life;
+    money.integer = currentGame.money;
+
+    publish_1p_event(UI_SET_NAME, name);
+    publish_1p_event(UI_SET_TIME, time);
+    publish_1p_event(UI_SET_LIFE, life);
+    publish_1p_event(UI_SET_MONEY, money);
 }
 
 void do_command(DataType command) {
@@ -60,14 +78,26 @@ void do_command(DataType command) {
         case CMD_GD:
         case CMD_GR:
         case CMD_GL:
-            current_time++;
+            currentGame.time++;
 
             DataType dt;
-            dt.integer = current_time;
-            publish_1p_event(SET_TIME, dt);
+            dt.integer = currentGame.time;
+            publish_1p_event(UI_SET_TIME, dt);
 
             break;
         default:
             break;
     }
+}
+
+/**
+ * New game
+ * @param name player's name
+ */
+void new_game(DataType name) {
+    // TODO initialize default values
+    currentGame.time = 0;
+    currentGame.life = 0;
+    currentGame.money = 1000;
+    currentGame.player_name = name.kata;
 }
