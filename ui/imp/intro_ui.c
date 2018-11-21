@@ -8,7 +8,6 @@
 
 #include "../intro_ui.h"
 #include "../../ins_set.h"
-#include "../../eventbus/eventbus.h"
 
 void intro_driver(FORM *form, FIELD **fields, int ch);
 void Intro_ExecuteCommands();
@@ -89,6 +88,10 @@ void Intro_ExecuteCommands() {
         retval = 1;
     } else if(CompareKata(CKata, INS_NEW, false)) {
         promptName();
+    } else if(CompareKata(CKata, INS_LOAD, false)) {
+        publish_event(LOAD_GAME);
+        keep_requesting = false;
+        retval = 1;
     }
 }
 

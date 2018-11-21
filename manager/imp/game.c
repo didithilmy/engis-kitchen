@@ -7,12 +7,10 @@
  */
 
 #include "../game.h"
-#include "../../eventbus/eventbus.h"
 
 void load_game();
 void save_game();
 void start_game();
-void post_start_game();
 void do_command(DataType command);
 void new_game(DataType name);
 
