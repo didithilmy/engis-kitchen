@@ -4,6 +4,7 @@
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
  * @author Zalikha Adiera Gambetta, NIM 18217027
+ * @author Muhammad Yanza Hattari NIM 18217043
  * @file map.c
  */
 
@@ -44,12 +45,10 @@ void map_manager_init() {
     char filename[30] = "map.dat";
     Kata nf;
     
-    // algoritma
-    /*STARTFILE(filename);
+    //algoritma
+    STARTFILE(filename);
     while (!IsEOPF())
     {
-    	printf("Char %c\n", GetFCC());
-    	ADVFILE();
 		if (GetFCC() != ';')
 		{
 			MAP_WIDTH = GetFCC(); // M
@@ -58,6 +57,10 @@ void map_manager_init() {
 			MAP_HEIGHT = GetFCC(); // N
 			ADVFILE();
 		}
+		else {
+		ADVFILE();
+		}
+		ADVFILE();
 		if (GetFCC() != ';')
 		{
 			xdr = GetFCC(); // lokasi x pintu restoran
@@ -67,7 +70,11 @@ void map_manager_init() {
 			// TODO MATRIKS DOOR RESTORAN
 			ADVFILE();
 		}
-		if (GetFCC() != ';')
+		else {
+		ADVFILE();
+		}
+		ADVFILE();
+		while (GetFCC() != ';')
 		{
 			if (GetFCC() == '(')
 			{
@@ -84,12 +91,13 @@ void map_manager_init() {
 				km = GetFCC(); // isi per meja 2/4 orang
 				AddMeja(&tabMeja, CreateMeja(MakePOINT(xm, ym), nm, km)); // TODO ADD MEJA
 			}
-			else if (GetFCC() == ')')
+			ADVFILE();
+			if (GetFCC() == ')')
 			{
 				ADVFILE();
 			}
-			ADVFILE();
 		}
+		ADVFILE();
 		if (GetFCC() != ';')
 		{
 			xdd = GetFCC(); // lokasi x pintu dapur
@@ -99,30 +107,33 @@ void map_manager_init() {
 			// TODO MATRIKS DOOR DAPUR
 			ADVFILE();
 		}
-		if (GetFCC() != ';')
+		else {
+		ADVFILE();
+		}
+		ADVFILE();
+		
+		while (GetFCC() != MKF_MARK)
 		{
 			if (GetFCC() == '(')
 			{
+				ADVFILE();
 				xf = GetFCC(); // lokasi x makanan
 				ADVFILE();
 				MKF_Ignore_Blank();
 				yf = GetFCC(); // lokasi y makanan
 				ADVFILE();
 				MKF_Ignore_Blank();
-				while (!EndKata)
-				{
-					// TODO BACA KATA HEHE BELOM :)
-					nf = CKata;
-					MKF_ADVKATA();
-				}	
+				MKF_SalinKata();
+				nf = CKata;
 				// TODO ADD FOOD	
 			}
-			else if (GetFCC() == ')')
+			ADVFILE();
+			if (GetFCC() == ')')
 			{
 				ADVFILE();
 			}
 		}
-	}*/
+	}
 
 	
     MAP_WIDTH = 9;
