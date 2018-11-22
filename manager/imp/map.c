@@ -124,7 +124,7 @@ void map_manager_init() {
 				ADVFILE();
 				MKF_Ignore_Blank();
 				MKF_SalinKata();
-				nf = CKata;
+				nf = MKF_CKata;
 				// TODO ADD FOOD	
 			}
 			ADVFILE();
