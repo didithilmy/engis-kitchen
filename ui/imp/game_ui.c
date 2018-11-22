@@ -25,6 +25,10 @@ void movePlayer(POINT moveTo);
 // Global variables
 DataType uiCMoney, uiCLife, uiCTime, uiCName;
 boolean isGameRunning;
+POINT uiRestoDoor, uiKitchenDoor;
+TabMeja tabMeja;
+TabFood tabFood;
+boolean isInRestaurant;
 
 int MapWidth, MapHeight;
 struct {
@@ -55,13 +59,6 @@ void postStartGame() {
     // Set is game running to true
     isGameRunning = true;
 
-    // Initiate curses
-    initscr();
-    cbreak();
-    noecho();
-    keypad(stdscr, TRUE);
-
-    // Build game screen
     MapWidth = publish_getval_event(GET_MAP_WIDTH).integer;
     MapHeight = publish_getval_event(GET_MAP_HEIGHT).integer;
     buildGameScreen(MapHeight, MapWidth);
@@ -76,7 +73,13 @@ void postStartGame() {
     player_position = MakePOINT(1, 1);
 
     // Load Meja map
-    loadMapMeja(publish_getval_event(GET_MAP_ARRAY).tabMeja);
+    // TODO change door coordinate
+    uiRestoDoor = MakePOINT(1, MapHeight);
+    uiKitchenDoor = MakePOINT(1, 1);
+    tabMeja = publish_getval_event(GET_MAP_ARRAY).tabMeja;
+    tabFood.N = 0;  //TODO remove
+    loadRestaurantLayout(tabMeja, uiRestoDoor);
+    isInRestaurant = true;
 
     // Move cursor to beginning of field
     form_driver(commandForm, REQ_BEG_FIELD);
@@ -94,8 +97,6 @@ void postStartGame() {
     unpost_form(commandForm);
     free_form(commandForm);
     free_field(field[0]);
-
-    endwin();
 }
 
 /**
@@ -121,7 +122,24 @@ void driver(FORM *form, FIELD **fields, int ch) {
             command = field_buffer(fields[0], 0);
             STARTKATA(command);
 
-            ExecuteCommands();
+            ExecuteCommands(CKata);
+            ui_driver(form, fields, ch);
+            break;
+        case KEY_DOWN:
+            ExecuteCommands(INS_MV_DOWN);
+            break;
+
+        case KEY_UP:
+            ExecuteCommands(INS_MV_UP);
+            break;
+
+        case KEY_LEFT:
+            ExecuteCommands(INS_MV_LEFT);
+            break;
+
+        case KEY_RIGHT:
+            ExecuteCommands(INS_MV_RIGHT);
+            break;
         default:
             ui_driver(form, fields, ch);
     }
@@ -130,13 +148,13 @@ void driver(FORM *form, FIELD **fields, int ch) {
 /**
  * Execute command stored in CKata
  */
-void ExecuteCommands() {
+void ExecuteCommands(Kata kata) {
     DataType dt;
     POINT point;
 
-    if(CompareKata(CKata, INS_EXIT, false)) {
+    if(CompareKata(kata, INS_EXIT, false)) {
         publish_event(EXIT_GAME);
-    } else if(CompareKata(CKata, INS_MV_UP, false)) {
+    } else if(CompareKata(kata, INS_MV_UP, false)) {
         point.X = player_position.X;
         point.Y = player_position.Y - 1;
         if(isMoveLegal(point)) {
@@ -145,7 +163,7 @@ void ExecuteCommands() {
             dt.cmd = CMD_GU;
             publish_1p_event(COMMAND, dt);
         }
-    } else if(CompareKata(CKata, INS_MV_DOWN, false)) {
+    } else if(CompareKata(kata, INS_MV_DOWN, false)) {
         point.X = player_position.X;
         point.Y = player_position.Y + 1;
 
@@ -155,7 +173,7 @@ void ExecuteCommands() {
             dt.cmd = CMD_GD;
             publish_1p_event(COMMAND, dt);
         }
-    } else if(CompareKata(CKata, INS_MV_LEFT, false)) {
+    } else if(CompareKata(kata, INS_MV_LEFT, false)) {
         point.X = player_position.X - 1;
         point.Y = player_position.Y;
 
@@ -165,7 +183,7 @@ void ExecuteCommands() {
             dt.cmd = CMD_GL;
             publish_1p_event(COMMAND, dt);
         }
-    } else if(CompareKata(CKata, INS_MV_RIGHT, false)) {
+    } else if(CompareKata(kata, INS_MV_RIGHT, false)) {
         point.X = player_position.X + 1;
         point.Y = player_position.Y;
 
@@ -257,15 +275,17 @@ void updateMapWindowCharacter(int x, int y, char *C) {
  * Load map meja
  * @param T TabMeja
  */
-void loadMapMeja(TabMeja T) {
+void loadRestaurantLayout(TabMeja T, POINT door) {
     int i;
-    wprintw(foodStackWindow, "Load Map Meja.. %d\n", T.N);
-    wrefresh(foodStackWindow);
 
+    // Clear all windows
+    for(i = 1; i <= TabWindow.N; i++) {
+        wclear(TabWindow.T[i]);
+        //wrefresh(TabWindow.T[i]);
+    }
+
+    // Render
     for(i = 1; i <= T.N; i++) {
-        wprintw(foodStackWindow, "Printing..\n");
-        wrefresh(foodStackWindow);
-
         Meja meja = T.T[i];
 
         char str[4];
@@ -289,6 +309,36 @@ void loadMapMeja(TabMeja T) {
             }
         }
     }
+
+    updateMapWindowCharacter(door.X, door.Y, "D");
+}
+
+/**
+ * Load map food
+ * @param T TabFood
+ */
+void loadKitchenLayout(TabFood T, POINT door) {
+    int i;
+
+    // Render
+    for(i = 1; i <= T.N; i++) {
+        Food food = T.T[i];
+        updateMapWindowCharacter(food.coordinate.X, food.coordinate.Y, "M");
+    }
+
+    updateMapWindowCharacter(door.X, door.Y, "D");
+}
+
+/**
+ * Clear map windows
+ */
+void clearMapWindows() {
+    int i;
+    // Clear all windows
+    for(i = 1; i <= TabWindow.N; i++) {
+        wclear(TabWindow.T[i]);
+        wrefresh(TabWindow.T[i]);
+    }
 }
 
 /**
@@ -306,14 +356,52 @@ boolean isMoveLegal(POINT point) {
  */
 void movePlayer(POINT moveTo) {
     if(isMoveLegal(moveTo)) {
-        // Clear previous point
-        updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
+        // Check if the moveTo point is a door in its respective layout
+        if(moveTo.X == uiRestoDoor.X && moveTo.Y == uiRestoDoor.Y && isInRestaurant) {
+            // If it goes to a door, change layout to kitchen
+            isInRestaurant = false;
+            clearMapWindows();
+            loadKitchenLayout(tabFood, uiKitchenDoor);
 
-        // Set new point
-        updateMapWindowCharacter(moveTo.X, moveTo.Y, "P");
+            // Clear previous point
+            updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
 
-        player_position.X = moveTo.X;
-        player_position.Y = moveTo.Y;
+            // Set new point
+            updateMapWindowCharacter(uiKitchenDoor.X, uiKitchenDoor.Y, "P");
+
+            player_position.X = uiKitchenDoor.X;
+            player_position.Y = uiKitchenDoor.Y;
+        } else if(moveTo.X == uiKitchenDoor.X && moveTo.Y == uiKitchenDoor.Y && !isInRestaurant) {
+            // If it goes to a door, change layout to restaurant
+            isInRestaurant = true;
+            clearMapWindows();
+            loadRestaurantLayout(tabMeja, uiRestoDoor);
+
+            // Clear previous point
+            updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
+
+            // Set new point
+            updateMapWindowCharacter(uiRestoDoor.X, uiRestoDoor.Y, "P");
+
+            player_position.X = uiRestoDoor.X;
+            player_position.Y = uiRestoDoor.Y;
+        } else {
+
+            // Check if player_position is a door
+            if((isInRestaurant && player_position.X == uiRestoDoor.X && player_position.Y == uiRestoDoor.Y) || (!isInRestaurant && player_position.X == uiKitchenDoor.X && player_position.Y == uiKitchenDoor.Y)) {
+                // If it is, set point to Door
+                updateMapWindowCharacter(player_position.X, player_position.Y, "D");
+            } else {
+                // Clear previous point
+                updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
+            }
+
+            // Set new point
+            updateMapWindowCharacter(moveTo.X, moveTo.Y, "P");
+
+            player_position.X = moveTo.X;
+            player_position.Y = moveTo.Y;
+        }
     }
 }
 

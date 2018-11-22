@@ -16,6 +16,7 @@
 #include <ctype.h>
 
 #include "ui_commons.h"
+#include "../adt/headers.h"
 
 #define MAP_GRID_LINE 3
 #define MAP_GRID_COL 6
@@ -38,6 +39,7 @@ WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
 void game_ui_init();
 
 void buildGameScreen(int HORZ, int VERT);
-void loadMapMeja(TabMeja T);
+void loadRestaurantLayout(TabMeja T, POINT door);
+void loadKitchenLayout(TabFood T, POINT door);
 
 #endif //ENGIS_KITCHEN_DISPLAY_H

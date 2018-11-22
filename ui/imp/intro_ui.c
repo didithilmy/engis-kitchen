@@ -27,11 +27,6 @@ int showIntro() {
     is_prompting_name = false;
     retval = 0;
 
-    initscr();
-    cbreak();
-    noecho();
-    keypad(stdscr, TRUE);
-
     buildIntroScreen();
 
     /* Loop through to get user requests */
@@ -41,8 +36,6 @@ int showIntro() {
         if(keep_requesting)
             ch = getch();
     }
-
-    endwin();
 
     return retval;
 }

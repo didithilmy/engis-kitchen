@@ -42,6 +42,14 @@ int main() {
     INS_EXIT = BuildKata("EXIT");
     INS_NEW = BuildKata("NEW");
 
+    // Initiate curses
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+
+    // Build game screen
+
     int ret = showIntro();
     DataType dt;
 
@@ -54,6 +62,9 @@ int main() {
                 ret = showIntro();
         }
     }
+
+
+    endwin();
 }
 
 void initialize_modules() {
