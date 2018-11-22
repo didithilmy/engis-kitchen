@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "../mesin_kar_file.h"
 
 char CC;

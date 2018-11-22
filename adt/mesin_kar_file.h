@@ -1,9 +1,9 @@
-#ifndef __MESIN_KAR__
-#define __MESIN_KAR__
+#ifndef __MESIN_KAR_FILE__
+#define __MESIN_KAR_FILE__
 
 #include "boolean.h"
 #include <stdio.h>
-#define MARK '.'
+#define MARK 0
 
 /* State Mesin */
 extern char FCC;
