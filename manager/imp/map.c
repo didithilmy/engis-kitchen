@@ -20,8 +20,6 @@ void onLoadGame();
 
 TabMeja tabMeja;
 
-FILE * filename;
-
 /**
  * Initiate module
  */
@@ -32,19 +30,20 @@ void map_manager_init() {
 
     // kamus
     int xdr, ydr, xm, ym, nm, km, xdd, ydd, xf, yf;
-    char filename[30];
+    char filename[30] = "map.dat";
     Kata nf;
     
     // algoritma
-    scanf("%s", filename);
-    STARTFILE(filename);
+    /*STARTFILE(filename);
     while (!IsEOPF())
     {
+    	printf("Char %c\n", GetFCC());
+    	ADVFILE();
 		if (GetFCC() != ';')
 		{
 			MAP_WIDTH = GetFCC(); // M
 			ADVFILE();
-			Ignore_Blank();
+			MKF_Ignore_Blank();
 			MAP_HEIGHT = GetFCC(); // N
 			ADVFILE();
 		}
@@ -52,7 +51,7 @@ void map_manager_init() {
 		{
 			xdr = GetFCC(); // lokasi x pintu restoran
 			ADVFILE();
-			Ignore_Blank();
+			MKF_Ignore_Blank();
 			ydr = GetFCC(); // lokasi y pintu restoran
 			// TODO MATRIKS DOOR RESTORAN
 			ADVFILE();
@@ -64,13 +63,13 @@ void map_manager_init() {
 				ADVFILE();
 				xm = GetFCC(); // lokasi x meja ke-n
 				ADVFILE();
-				Ignore_Blank();
+				MKF_Ignore_Blank();
 				ym = GetFCC(); // lokasi y meja ke-n
 				ADVFILE();
-				Ignore_Blank();
+				MKF_Ignore_Blank();
 				nm = GetFCC(); // nomor meja
 				ADVFILE();
-				Ignore_Blank();
+				MKF_Ignore_Blank();
 				km = GetFCC(); // isi per meja 2/4 orang
 				AddMeja(&tabMeja, CreateMeja(MakePOINT(xm, ym), nm, km)); // TODO ADD MEJA
 			}
@@ -84,7 +83,7 @@ void map_manager_init() {
 		{
 			xdd = GetFCC(); // lokasi x pintu dapur
 			ADVFILE();
-			Ignore_Blank();
+			MKF_Ignore_Blank();
 			ydd = GetFCC(); // lokasi y pintu dapur
 			// TODO MATRIKS DOOR DAPUR
 			ADVFILE();
@@ -95,15 +94,15 @@ void map_manager_init() {
 			{
 				xf = GetFCC(); // lokasi x makanan
 				ADVFILE();
-				Ignore_Blank();
+				MKF_Ignore_Blank();
 				yf = GetFCC(); // lokasi y makanan
 				ADVFILE();
-				Ignore_Blank();
+				MKF_Ignore_Blank();
 				while (!EndKata)
 				{
 					// TODO BACA KATA HEHE BELOM :)
 					nf = CKata;
-					ADVKATA();
+					MKF_ADVKATA();
 				}	
 				// TODO ADD FOOD	
 			}
@@ -112,14 +111,16 @@ void map_manager_init() {
 				ADVFILE();
 			}
 		}
-	}
+	}*/
 
 	
     // TODO load TabMeja
-    //AddMeja(&tabMeja, CreateMeja(MakePOINT(3, 3), 2, 1));
-    //AddMeja(&tabMeja, CreateMeja(MakePOINT(7, 3), 4, 2));
-    //AddMeja(&tabMeja, CreateMeja(MakePOINT(3, 7), 2, 3));
-    //AddMeja(&tabMeja, CreateMeja(MakePOINT(7, 7), 4, 4));
+    MAP_WIDTH = 9;
+    MAP_HEIGHT = 9;
+    AddMeja(&tabMeja, CreateMeja(MakePOINT(3, 3), 2, 1));
+    AddMeja(&tabMeja, CreateMeja(MakePOINT(7, 3), 4, 2));
+    AddMeja(&tabMeja, CreateMeja(MakePOINT(3, 7), 2, 3));
+    AddMeja(&tabMeja, CreateMeja(MakePOINT(7, 7), 4, 4));
 
     listen_getval_event(GET_MAP_WIDTH, &get_map_width);
     listen_getval_event(GET_MAP_HEIGHT, &get_map_height);

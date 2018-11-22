@@ -1,7 +1,7 @@
 #include "../mesin_kar_file.h"
 
 char FCC;
-boolean EOP;
+boolean EOPF;
 
 static FILE *pita;
 static int retval;

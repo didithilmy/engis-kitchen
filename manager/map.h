@@ -10,7 +10,7 @@
 #ifndef ENGIS_KITCHEN_MAP_H
 #define ENGIS_KITCHEN_MAP_H
 
-#include "../adt/mesin_kar_file.h"
+#include "../adt/mesin_kata_file.h"
 
 void map_manager_init();
 
