@@ -1,6 +1,6 @@
 #include "../mesin_kar_file.h"
 
-char CC;
+char FCC;
 boolean EOP;
 
 static FILE *pita;
