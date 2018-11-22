@@ -1,10 +1,11 @@
 /**
  * Engi's Kitchen Expansion
- * Intro display abstraction
+ * Game over display abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
- * @file display.h
+ * @file gameover_ui.h
  */
+
 
 #ifndef ENGIS_KITCHEN_GMOVER_DISPLAY_H
 #define ENGIS_KITCHEN_GMOVER_DISPLAY_H
@@ -17,15 +18,9 @@
 
 #include "ui_commons.h"
 
-extern FIELD *intro_field[2];
-extern FORM  *nameForm;
-
-FIELD *intro_field[2];
-FORM  *nameForm;
-
-void intro_ui_init();
-void buildIntroScreen();
-int showIntro();
+void gameover_ui_init();
+void buildGameOverScreen();
+void showGameOver();
 
 
 #endif //ENGIS_KITCHEN_GMOVER_DISPLAY_H

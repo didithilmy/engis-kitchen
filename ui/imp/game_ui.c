@@ -9,11 +9,13 @@
 #include "../game_ui.h"
 #include "../../ins_set.h"
 #include "../../adt/headers.h"
+#include "../gameover_ui.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands(Kata kata);
 void postStartGame();
 void onExitGame();
+void onGameOver();
 
 void updateMoney(DataType money);
 void updateLife(DataType life);
@@ -26,7 +28,7 @@ void updateTooltip(POINT loc);
 
 // Global variables
 DataType uiCMoney, uiCLife, uiCTime, uiCName;
-boolean isGameRunning;
+boolean isGameRunning, isGameOver;
 POINT uiRestoDoor, uiKitchenDoor;
 TabMeja tabMeja;
 TabFood tabFood;
@@ -45,9 +47,11 @@ POINT player_position;
  */
 void game_ui_init() {
     isGameRunning = false;
+    isGameOver = false;
     // Subscribe to events
     listen_post_event(START_GAME, &postStartGame);
     listen_event(EXIT_GAME, &onExitGame);
+    listen_event(GAME_OVER, &onGameOver);
     listen_1p_event(UI_SET_NAME, &updateName);
     listen_1p_event(UI_SET_LIFE, &updateLife);
     listen_1p_event(UI_SET_TIME, &updateTime);
@@ -58,6 +62,8 @@ void game_ui_init() {
  * Called when the game is started (post event)
  */
 void postStartGame() {
+    clear();
+
     // Set is game running to true
     isGameRunning = true;
 
@@ -100,6 +106,8 @@ void postStartGame() {
     unpost_form(commandForm);
     free_form(commandForm);
     free_field(field[0]);
+
+
 }
 
 /**
@@ -108,6 +116,17 @@ void postStartGame() {
 void onExitGame() {
     isGameRunning = false;
 }
+
+
+/**
+ * Called when the game is over
+ */
+void onGameOver() {
+    isGameRunning = false;
+    isGameOver = true;
+    showGameOver();
+}
+
 
 /**
  * Logical form driver
@@ -196,6 +215,8 @@ void ExecuteCommands(Kata kata) {
             dt.cmd = CMD_GR;
             publish_1p_event(COMMAND, dt);
         }
+    } else if(CompareKata(kata, INS_DEBUG_OVER, false)) {
+        publish_event(GAME_OVER);
     }
 }
 

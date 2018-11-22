@@ -38,6 +38,8 @@ int main() {
     INS_EXIT = BuildKata("EXIT");
     INS_NEW = BuildKata("NEW");
 
+    INS_DEBUG_OVER = BuildKata("DEBUG:OVER");
+
     // Initiate curses
     initscr();
     cbreak();
