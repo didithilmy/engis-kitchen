@@ -22,7 +22,8 @@ typedef struct {
     int N;
 } TabMeja;
 
-void AddMeja(TabMeja *T, Meja M);
+void InitTabMeja(TabMeja *T);
+Meja *AddMeja(TabMeja *T, Meja M);
 Meja CreateMeja(POINT coord, int capacity, int tableNo);
 
 #endif //ENGIS_KITCHEN_MEJA_H

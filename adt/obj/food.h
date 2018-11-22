@@ -20,11 +20,13 @@ typedef struct {
     int N;
 } TabFood;
 
-void AddFood(TabFood *TF, Food F);
+Food *AddFood(TabFood *TF, Food F);
 //I.S adalah Tabel Food sembarang 
 //F.S adalah makanan ditambahkan dalam tabel makanan 
 
 Food CreateFood(POINT coord, Kata nama); 
 //Fungsi pada awal loading file untuk menambahkan makanan dengan koordinatnya
+
+void InitTabFood(TabFood *T);
 
 #endif //ENGIS_KITCHEN_FOOD_H

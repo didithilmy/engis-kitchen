@@ -9,7 +9,7 @@
 #ifndef PROJECT_INS_SET_H
 #define PROJECT_INS_SET_H
 
-#include "adt/mesin_kata.h"
+#include "adt/headers.h"
 
 extern Kata INS_MV_UP, INS_MV_DOWN, INS_MV_LEFT, INS_MV_RIGHT;
 extern Kata INS_ORDER, INS_TAKE, INS_CLEAR_TRAY, INS_PLACE, INS_GIVE;

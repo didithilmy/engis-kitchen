@@ -10,7 +10,7 @@
 
 #include "../ins_set.h"
 #include "../ui/game_ui.h"
-#include "../adt/mesin_kata.h"
+#include "../adt/headers.h"
 
 typedef struct {
     Kata player_name;

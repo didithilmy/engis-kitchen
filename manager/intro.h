@@ -10,7 +10,7 @@
 
 #include "../ins_set.h"
 #include "../ui/intro_ui.h"
-#include "../adt/mesin_kata.h"
+#include "../adt/headers.h"
 
 void intro_manager_init();
 

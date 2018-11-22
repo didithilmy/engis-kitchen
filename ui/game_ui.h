@@ -27,13 +27,13 @@ extern FIELD *field[2];
 extern FORM  *commandForm;
 extern WINDOW **mapWindows;
 extern WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
-extern WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
+extern WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow, *tooltipWindow;
 
 FIELD *field[2];
 FORM  *commandForm;
 WINDOW **mapWindows;
 WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
-WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow;
+WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow, *tooltipWindow;
 
 
 void game_ui_init();

@@ -8,9 +8,10 @@
 
 #include "../game_ui.h"
 #include "../../ins_set.h"
+#include "../../adt/headers.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
-void ExecuteCommands();
+void ExecuteCommands(Kata kata);
 void postStartGame();
 void onExitGame();
 
@@ -21,6 +22,7 @@ void updateName(DataType name);
 
 boolean isMoveLegal(POINT point);
 void movePlayer(POINT moveTo);
+void updateTooltip(POINT loc);
 
 // Global variables
 DataType uiCMoney, uiCLife, uiCTime, uiCName;
@@ -69,15 +71,16 @@ void postStartGame() {
     updateLife(uiCLife);
     updateMoney(uiCMoney);
 
-    // Set player cursor TODO change
-    player_position = MakePOINT(1, 1);
-
     // Load Meja map
     // TODO change door coordinate
     uiRestoDoor = MakePOINT(1, MapHeight);
     uiKitchenDoor = MakePOINT(1, 1);
-    tabMeja = publish_getval_event(GET_MAP_ARRAY).tabMeja;
-    tabFood.N = 0;  //TODO remove
+    tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
+    tabFood = publish_getval_event(GET_TAB_FOOD).tabFood;
+
+    // Set player cursor to be the resto door
+    player_position = uiRestoDoor;
+
     loadRestaurantLayout(tabMeja, uiRestoDoor);
     isInRestaurant = true;
 
@@ -268,7 +271,19 @@ void updateName(DataType name) {
 void updateMapWindowCharacter(int x, int y, char *C) {
     int aIndex = (((y-1) * MapWidth) + x);
     mvwprintw(TabWindow.T[aIndex], 0, 1, C);
-    wrefresh(TabWindow.T[aIndex]);
+    wnoutrefresh(TabWindow.T[aIndex]);
+}
+
+/**
+ * Clear the character in the respective window coordinate
+ * @param x
+ * @param y
+ * @param C
+ */
+void clearMapWindow(int x, int y) {
+    int aIndex = (((y-1) * MapWidth) + x);
+    wclear(TabWindow.T[aIndex]);
+    wnoutrefresh(TabWindow.T[aIndex]);
 }
 
 /**
@@ -277,12 +292,6 @@ void updateMapWindowCharacter(int x, int y, char *C) {
  */
 void loadRestaurantLayout(TabMeja T, POINT door) {
     int i;
-
-    // Clear all windows
-    for(i = 1; i <= TabWindow.N; i++) {
-        wclear(TabWindow.T[i]);
-        //wrefresh(TabWindow.T[i]);
-    }
 
     // Render
     for(i = 1; i <= T.N; i++) {
@@ -310,7 +319,12 @@ void loadRestaurantLayout(TabMeja T, POINT door) {
         }
     }
 
-    updateMapWindowCharacter(door.X, door.Y, "D");
+    // Put player on door
+    player_position.X = door.X;
+    player_position.Y = door.Y;
+
+    updateMapWindowCharacter(door.X, door.Y, "P");
+    doupdate();
 }
 
 /**
@@ -326,7 +340,12 @@ void loadKitchenLayout(TabFood T, POINT door) {
         updateMapWindowCharacter(food.coordinate.X, food.coordinate.Y, "M");
     }
 
-    updateMapWindowCharacter(door.X, door.Y, "D");
+    // Put player on door
+    player_position.X = door.X;
+    player_position.Y = door.Y;
+
+    updateMapWindowCharacter(door.X, door.Y, "P");
+    doupdate();
 }
 
 /**
@@ -336,8 +355,10 @@ void clearMapWindows() {
     int i;
     // Clear all windows
     for(i = 1; i <= TabWindow.N; i++) {
-        wclear(TabWindow.T[i]);
-        wrefresh(TabWindow.T[i]);
+        if(mvwinch(TabWindow.T[i], 0, 1) != 0) {
+            wclear(TabWindow.T[i]);
+            wnoutrefresh(TabWindow.T[i]);
+        }
     }
 }
 
@@ -347,7 +368,15 @@ void clearMapWindows() {
  * @return is move legal
  */
 boolean isMoveLegal(POINT point) {
-    return (point.X > 0 && point.Y > 0) && (point.X <= MapWidth && point.Y <= MapHeight);
+    // Get matrix
+    MATRIKS matriks;
+    if(isInRestaurant) {
+        matriks = publish_getval_event(GET_RESTO_MATRIX).matriks;
+    } else {
+        matriks = publish_getval_event(GET_KITCHEN_MATRIX).matriks;
+    }
+
+    return (point.X > 0 && point.Y > 0) && (point.X <= MapWidth && point.Y <= MapHeight) && !ElmtIsPhysical(matriks, point.Y, point.X);
 }
 
 /**
@@ -362,29 +391,11 @@ void movePlayer(POINT moveTo) {
             isInRestaurant = false;
             clearMapWindows();
             loadKitchenLayout(tabFood, uiKitchenDoor);
-
-            // Clear previous point
-            updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
-
-            // Set new point
-            updateMapWindowCharacter(uiKitchenDoor.X, uiKitchenDoor.Y, "P");
-
-            player_position.X = uiKitchenDoor.X;
-            player_position.Y = uiKitchenDoor.Y;
         } else if(moveTo.X == uiKitchenDoor.X && moveTo.Y == uiKitchenDoor.Y && !isInRestaurant) {
             // If it goes to a door, change layout to restaurant
             isInRestaurant = true;
             clearMapWindows();
             loadRestaurantLayout(tabMeja, uiRestoDoor);
-
-            // Clear previous point
-            updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
-
-            // Set new point
-            updateMapWindowCharacter(uiRestoDoor.X, uiRestoDoor.Y, "P");
-
-            player_position.X = uiRestoDoor.X;
-            player_position.Y = uiRestoDoor.Y;
         } else {
 
             // Check if player_position is a door
@@ -393,7 +404,7 @@ void movePlayer(POINT moveTo) {
                 updateMapWindowCharacter(player_position.X, player_position.Y, "D");
             } else {
                 // Clear previous point
-                updateMapWindowCharacter(player_position.X, player_position.Y, "  ");
+                clearMapWindow(player_position.X, player_position.Y);
             }
 
             // Set new point
@@ -402,8 +413,46 @@ void movePlayer(POINT moveTo) {
             player_position.X = moveTo.X;
             player_position.Y = moveTo.Y;
         }
+
+        updateTooltip(moveTo);
+        doupdate();
     }
 }
+
+/**
+ * Update tooltip window
+ * @param loc
+ */
+void updateTooltip(POINT loc) {
+    // Local variables
+    MATRIKS matriks;
+    Kata foodName;
+    int i;
+
+    if(isInRestaurant) {
+        matriks = publish_getval_event(GET_RESTO_MATRIX).matriks;
+    } else {
+        matriks = publish_getval_event(GET_KITCHEN_MATRIX).matriks;
+    }
+
+    wclear(tooltipWindow);
+    switch (ElmtType(matriks, loc.Y, loc.X)) {
+        case M_MEJA:
+            mvwprintw(tooltipWindow, 0, 0, "Table %d", ElmtMeja(matriks, loc.Y, loc.X)->tableNo);
+            break;
+        case M_FOOD:
+            foodName = ElmtFood(matriks, loc.Y, loc.X)->name;
+            for(i = 1; i <= foodName.Length; i++) {
+                wprintw(tooltipWindow, "%c", foodName.TabKata[i]);
+            }
+            break;
+        default:
+            mvwprintw(tooltipWindow, 0, 0, isInRestaurant ? "Dining Room" : "Kitchen");
+    }
+
+    wrefresh(tooltipWindow);
+}
+
 
 /**
  * Builds game screen
@@ -430,7 +479,11 @@ void buildGameScreen(int HORZ, int VERT) {
     commandForm = new_form(field);
     post_form(commandForm);
     mvprintw(MAP_TOP_OFFSET_LINE + HEIGHT+2, 1, "%s", "Command: ");
-    printBorder(MAP_TOP_OFFSET_LINE + HEIGHT + 1, MAP_TOP_OFFSET_LINE + HEIGHT+3, 0, WIDTH);
+    printBorder(MAP_TOP_OFFSET_LINE + HEIGHT + 1, MAP_TOP_OFFSET_LINE + HEIGHT+3, 0, WIDTH - SIDE_PANEL_WIDTH - 1);
+
+    // Initiate tooltip panel
+    printBorder(MAP_TOP_OFFSET_LINE + HEIGHT + 1, MAP_TOP_OFFSET_LINE + HEIGHT+3, WIDTH - SIDE_PANEL_WIDTH, WIDTH);
+    tooltipWindow = newwin(1, SIDE_PANEL_WIDTH - 2, MAP_TOP_OFFSET_LINE + HEIGHT+2, WIDTH - SIDE_PANEL_WIDTH + 2);
 
     // Initiate name panel
     printBorder(0, 2, 0, SIDE_PANEL_WIDTH);
@@ -481,7 +534,8 @@ void buildGameScreen(int HORZ, int VERT) {
             n++;
             printBorder(MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE), MAP_TOP_OFFSET_LINE + ((i+1)*MAP_GRID_LINE), (SIDE_PANEL_WIDTH + 1) + (j*MAP_GRID_COL), (SIDE_PANEL_WIDTH + 1) + ((j+1)*MAP_GRID_COL));
             TabWindow.T[n] = newwin(MAP_GRID_LINE - 1, MAP_GRID_COL - 1, MAP_TOP_OFFSET_LINE + (i*MAP_GRID_LINE) + 1, (SIDE_PANEL_WIDTH + 1) + (j*MAP_GRID_COL) + 1);
-            refresh();
         }
     }
+
+    refresh();
 }

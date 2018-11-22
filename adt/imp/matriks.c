@@ -56,6 +56,6 @@ void EditMATRIKS (int i, int j, MATRIKS * M, MatriksType TipeMatriks, Food * foo
 */
 			ElmtFood(*M,i,j) = food;
 			ElmtMeja(*M,i,j) = meja;
-			ElmtIsPhysical(*M,i,j) = true;
+			ElmtIsPhysical(*M,i,j) = IsPhysical;
 			ElmtType(*M,i,j) = TipeMatriks;
 }

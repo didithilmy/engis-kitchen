@@ -6,13 +6,9 @@
  * @author Muhammad Aditya Hilmy, NIM 18217025
  */
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "manager/intro.h"
 #include "manager/game.h"
 #include "manager/map.h"
-#include "ins_set.h"
-#include "eventbus/eventbus.h"
 
 char command[32];
 

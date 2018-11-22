@@ -9,14 +9,25 @@
  * Add Meja to TabMeja
  * @param T TabMeja
  * @param M Meja
+ * @return pointer to Meja
  */
-void AddMeja(TabMeja *T, Meja M) {
+Meja *AddMeja(TabMeja *T, Meja M) {
     if(T->N < MAX_MEJA) {
         T->N++;
         T->T[T->N] = M;
+        return &(T->T[T->N]);
+    } else {
+        return NULL;
     }
 }
 
+/**
+ * Builds new Meja object
+ * @param coord coordinate
+ * @param capacity capacity (2 or 4)
+ * @param tableNo table number
+ * @return Meja object
+ */
 Meja CreateMeja(POINT coord, int capacity, int tableNo) {
     Meja meja;
 
@@ -26,4 +37,12 @@ Meja CreateMeja(POINT coord, int capacity, int tableNo) {
     meja.custAddress = NULL;
 
     return meja;
+}
+
+/**
+ * Initialize array of Meja
+ * @param T array of meja
+ */
+void InitTabMeja(TabMeja *T) {
+    T->N = 0;
 }

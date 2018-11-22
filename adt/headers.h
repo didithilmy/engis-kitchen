@@ -17,6 +17,7 @@
 #include "mesin_kar.h"
 #include "mesin_kar_file.h"
 #include "mesin_kata.h"
+#include "mesin_kata_file.h"
 #include "order_list.h"
 #include "point.h"
 

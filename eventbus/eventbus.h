@@ -9,9 +9,8 @@
 #ifndef EVENTBUSTEST_EVENTBUS_H
 #define EVENTBUSTEST_EVENTBUS_H
 
-#include "../adt/mesin_kata.h"
 #include "events.h"
-#include "../adt/obj/meja.h"
+#include "../adt/headers.h"
 
 #define MAX_LISTENERS 5
 
@@ -23,6 +22,8 @@ typedef union {
     Commands cmd;
     Meja meja;
     TabMeja tabMeja;
+    TabFood tabFood;
+    MATRIKS matriks;
 } DataType;
 
 

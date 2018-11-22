@@ -8,15 +8,26 @@
  * Add Food to TabFood
  * @param TF TabFood
  * @param F Food
+ * @return pointer to food
  */
 
-void AddFood(TabFood *TF, Food F) {
+Food *AddFood(TabFood *TF, Food F) {
     if(TF->N < MAX_FOOD) {
         TF->N++;
         TF->T[TF->N] = F;
+
+        return &(TF->T[TF->N]);
+    } else {
+        return NULL;
     }
 }
 
+/**
+ * Builds new Food object
+ * @param coord coordinate
+ * @param name food name
+ * @return food object
+ */
 Food CreateFood(POINT coord, Kata name) {
     Food food;
 
@@ -26,3 +37,10 @@ Food CreateFood(POINT coord, Kata name) {
     return food;
 }
 
+/**
+ * Initialize array of Food
+ * @param T array of Food
+ */
+void InitTabFood(TabFood *T) {
+    T->N = 0;
+}

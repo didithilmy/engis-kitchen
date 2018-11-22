@@ -10,7 +10,7 @@
 #ifndef ENGIS_KITCHEN_MAP_H
 #define ENGIS_KITCHEN_MAP_H
 
-#include "../adt/mesin_kata_file.h"
+#include "../adt/headers.h"
 
 void map_manager_init();
 

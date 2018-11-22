@@ -9,7 +9,7 @@
 #ifndef PROJECT_GLOBALS_H
 #define PROJECT_GLOBALS_H
 
-#include "adt/mesin_kata.h"
+#include "adt/headers.h"
 
 extern Kata PLAYER_NAME;
 
