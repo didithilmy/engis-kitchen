@@ -10,11 +10,11 @@
 
 #include "../mesin_kata_file.h"
 
-boolean EndKata;
-Kata CKata;
+boolean MKF_EndKata;
+Kata MKF_CKata;
 
 void MKF_Ignore_Blank() {
-    while(GetFCC() == MKF_BLANK && (GetFCC() != MARK)) {
+    while(GetFCC() == BLANK && (GetFCC() != MARK)) {
         ADVFILE();
     }
 }
@@ -24,9 +24,9 @@ void MKF_STARTKATA(char *string) {
     MKF_Ignore_Blank();
 
     if(IsEOPF()) {
-        EndKata = true;
+        MKF_EndKata = true;
     } else {
-        EndKata = false;
+        MKF_EndKata = false;
         MKF_SalinKata();
     }
 }
@@ -34,7 +34,7 @@ void MKF_STARTKATA(char *string) {
 void MKF_ADVKATA() {
     MKF_Ignore_Blank();
     if(IsEOPF()) {
-        EndKata = true;
+        MKF_EndKata = true;
     } else {
         MKF_SalinKata();
     }
@@ -43,13 +43,13 @@ void MKF_ADVKATA() {
 void MKF_SalinKata() {
     int i = 1;
     while(1) {
-        CKata.TabKata[i] = GetFCC();
+        MKF_CKata.TabKata[i] = GetFCC();
         ADVFILE();
-        if(IsEOPF() || GetFCC() == MKF_BLANK) {
+        if(IsEOPF() || GetFCC() == BLANK) {
             break;
         } else {
             i++;
         }
     }
-    CKata.Length = i;
+    MKF_CKata.Length = i;
 }

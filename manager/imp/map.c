@@ -89,7 +89,7 @@ void map_manager_init() {
 				ADVFILE();
 				MKF_Ignore_Blank();
 				km = GetFCC(); // isi per meja 2/4 orang
-				AddMeja(&tabMeja, CreateMeja(MakePOINT(xm, ym), nm, km)); // TODO ADD MEJA
+				registerMeja(CreateMeja(MakePOINT(xm, ym), nm, km)); // TODO ADD MEJA
 			}
 			ADVFILE();
 			if (GetFCC() == ')')
@@ -112,7 +112,7 @@ void map_manager_init() {
 		}
 		ADVFILE();
 		
-		while (GetFCC() != MKF_MARK)
+		while (GetFCC() != MARK)
 		{
 			if (GetFCC() == '(')
 			{

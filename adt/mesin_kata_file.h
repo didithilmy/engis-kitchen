@@ -1,20 +1,12 @@
-#ifndef PROJECT_MESIN_KATA_H
-#define PROJECT_MESIN_KATA_H
+#ifndef PROJECT_MESIN_KATA_FILE_H
+#define PROJECT_MESIN_KATA_FILE_H
 
 #include "mesin_kar_file.h"
-
-#define MKF_NMax 50
-#define MKF_BLANK ' '
-#define MKF_MARK 0
-
-typedef struct {
-    char TabKata[MKF_NMax+1];
-    int Length;
-} Kata;
+#include "mesin_kata.h"
 
 /* State Mesin Kata */
-extern boolean EndKata;
-extern Kata CKata;
+extern boolean MKF_EndKata;
+extern Kata MKF_CKata;
 
 //{ ***** Primitif-Primitif Mesin Kata ***** }
 void MKF_Ignore_Blank();
