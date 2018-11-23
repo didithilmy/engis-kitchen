@@ -21,140 +21,131 @@ DataType get_tab_meja();
 DataType get_tab_food();
 DataType get_resto_matrix();
 DataType get_kitchen_matrix();
+DataType get_resto_door();
+DataType get_kitchen_door();
 void onLoadGame();
 void registerMeja(Meja meja);
 void registerFood(Food food);
 boolean isFoodPointerLegal(int x, int y);
+void InitializeMatrix();
 
 int MAP_WIDTH, MAP_HEIGHT;
 
 TabMeja tabMeja;
 TabFood tabFood;
 MATRIKS restoMatrix, kitchenMatix;
+POINT restoDoor, kitchenDoor;
 
 /**
  * Initiate module
  */
 void map_manager_init() {
-    // TODO load map files
-    
+    // Initialize array
+    InitTabFood(&tabFood);
+    InitTabMeja(&tabMeja);
+
     // DIT GATAU YA BENER APA GA COMPILE SUCCESS TAPI HAHA
+    // Udah bener kok -didit
 
     // kamus
     int xdr, ydr, xm, ym, nm, km, xdd, ydd, xf, yf;
     char filename[30] = "map.dat";
     Kata nf;
-    
+
     //algoritma
     STARTFILE(filename);
     while (!IsEOPF())
     {
-		if (GetFCC() != ';')
-		{
-			MAP_WIDTH = GetFCC(); // M
-			ADVFILE();
-			MKF_Ignore_Blank();
-			MAP_HEIGHT = GetFCC(); // N
-			ADVFILE();
-		}
-		else {
-		ADVFILE();
-		}
-		ADVFILE();
-		if (GetFCC() != ';')
-		{
-			xdr = GetFCC(); // lokasi x pintu restoran
-			ADVFILE();
-			MKF_Ignore_Blank();
-			ydr = GetFCC(); // lokasi y pintu restoran
-			// TODO MATRIKS DOOR RESTORAN
-			ADVFILE();
-		}
-		else {
-		ADVFILE();
-		}
-		ADVFILE();
-		while (GetFCC() != ';')
-		{
-			if (GetFCC() == '(')
-			{
-				ADVFILE();
-				xm = GetFCC(); // lokasi x meja ke-n
-				ADVFILE();
-				MKF_Ignore_Blank();
-				ym = GetFCC(); // lokasi y meja ke-n
-				ADVFILE();
-				MKF_Ignore_Blank();
-				nm = GetFCC(); // nomor meja
-				ADVFILE();
-				MKF_Ignore_Blank();
-				km = GetFCC(); // isi per meja 2/4 orang
-				registerMeja(CreateMeja(MakePOINT(xm, ym), nm, km)); // TODO ADD MEJA
-			}
-			ADVFILE();
-			if (GetFCC() == ')')
-			{
-				ADVFILE();
-			}
-		}
-		ADVFILE();
-		if (GetFCC() != ';')
-		{
-			xdd = GetFCC(); // lokasi x pintu dapur
-			ADVFILE();
-			MKF_Ignore_Blank();
-			ydd = GetFCC(); // lokasi y pintu dapur
-			// TODO MATRIKS DOOR DAPUR
-			ADVFILE();
-		}
-		else {
-		ADVFILE();
-		}
-		ADVFILE();
-		
-		while (GetFCC() != MARK)
-		{
-			if (GetFCC() == '(')
-			{
-				ADVFILE();
-				xf = GetFCC(); // lokasi x makanan
-				ADVFILE();
-				MKF_Ignore_Blank();
-				yf = GetFCC(); // lokasi y makanan
-				ADVFILE();
-				MKF_Ignore_Blank();
-				MKF_SalinKata();
-				nf = MKF_CKata;
-				// TODO ADD FOOD	
-			}
-			ADVFILE();
-			if (GetFCC() == ')')
-			{
-				ADVFILE();
-			}
-		}
-	}
+        if (GetFCC() != ';')
+        {
+            MAP_WIDTH = GetFCC() - '0'; // M
+            ADVFILE();
+            MKF_Ignore_Blank();
+            MAP_HEIGHT = GetFCC() - '0'; // N
 
-	
-    MAP_WIDTH = 9;
-    MAP_HEIGHT = 9;
+            InitializeMatrix();
 
-    // Initialize arrays and variables
-    InitTabFood(&tabFood);
-    InitTabMeja(&tabMeja);
-    MakeMATRIKS(MAP_HEIGHT, MAP_WIDTH, &restoMatrix);
-    MakeMATRIKS(MAP_HEIGHT, MAP_WIDTH, &kitchenMatix);
+            ADVFILE();
+        } else {
+            ADVFILE();
+        }
+        ADVFILE();
+        if (GetFCC() != ';')
+        {
+            xdr = GetFCC() - '0'; // lokasi x pintu restoran
+            ADVFILE();
+            MKF_Ignore_Blank();
+            ydr = GetFCC() - '0'; // lokasi y pintu restoran
 
-    // TODO load TabMeja
-    registerMeja(CreateMeja(MakePOINT(3, 3), 2, 1));
-    registerMeja(CreateMeja(MakePOINT(7, 3), 4, 2));
-    registerMeja(CreateMeja(MakePOINT(3, 7), 2, 3));
-    registerMeja(CreateMeja(MakePOINT(7, 7), 4, 4));
+            restoDoor = MakePOINT(xdr, ydr);
+            ADVFILE();
+        }
+        else {
+            ADVFILE();
+        }
+        ADVFILE();
+        while (GetFCC() != ';')
+        {
+            if (GetFCC() == '(')
+            {
+                ADVFILE();
+                xm = GetFCC() - '0'; // lokasi x meja ke-n
+                ADVFILE();
+                MKF_Ignore_Blank();
+                ym = GetFCC() - '0'; // lokasi y meja ke-n
+                ADVFILE();
+                MKF_Ignore_Blank();
+                nm = GetFCC() - '0'; // nomor meja
+                ADVFILE();
+                MKF_Ignore_Blank();
+                km = GetFCC() - '0'; // isi per meja 2/4 orang
+                registerMeja(CreateMeja(MakePOINT(xm, ym), km, nm));
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+        if (GetFCC() != ';')
+        {
+            xdd = GetFCC() - '0'; // lokasi x pintu dapur
+            ADVFILE();
+            MKF_Ignore_Blank();
+            ydd = GetFCC() - '0'; // lokasi y pintu dapur
 
-    // TODO load TabFood
-    registerFood(CreateFood(MakePOINT(4, 1), BuildKata("Bebek")));
-    registerFood(CreateFood(MakePOINT(4, 2), BuildKata("Sapi")));
-    registerFood(CreateFood(MakePOINT(4, 3), BuildKata("Ayam")));
+            kitchenDoor = MakePOINT(xdd, ydd);
+            ADVFILE();
+        }
+        else {
+            ADVFILE();
+        }
+        ADVFILE();
+
+        while (GetFCC() != MKF_MARK)
+        {
+            if (GetFCC() == '(')
+            {
+                ADVFILE();
+                xf = GetFCC() - '0'; // lokasi x makanan
+                ADVFILE();
+                MKF_Ignore_Blank();
+                yf = GetFCC() - '0'; // lokasi y makanan
+                ADVFILE();
+                MKF_Ignore_Blank();
+                MKF_SalinKata();
+                nf = MKF_CKata;
+                // TODO ADD FOOD
+                registerFood(CreateFood(MakePOINT(xf, yf), nf));
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+    }
 
     listen_getval_event(GET_MAP_WIDTH, &get_map_width);
     listen_getval_event(GET_MAP_HEIGHT, &get_map_height);
@@ -162,7 +153,15 @@ void map_manager_init() {
     listen_getval_event(GET_TAB_FOOD, &get_tab_food);
     listen_getval_event(GET_RESTO_MATRIX, &get_resto_matrix);
     listen_getval_event(GET_KITCHEN_MATRIX, &get_kitchen_matrix);
+    listen_getval_event(GET_RESTO_DOOR_COORD, &get_resto_door);
+    listen_getval_event(GET_KITCHEN_DOOR_COORD, &get_kitchen_door);
     listen_event(LOAD_GAME, &onLoadGame);
+}
+
+void InitializeMatrix() {
+    // Initialize arrays and variables
+    MakeMATRIKS(MAP_HEIGHT, MAP_WIDTH, &restoMatrix);
+    MakeMATRIKS(MAP_HEIGHT, MAP_WIDTH, &kitchenMatix);
 }
 
 /**
@@ -229,6 +228,26 @@ DataType get_kitchen_matrix() {
     DataType dt;
     dt.matriks = kitchenMatix;
 
+    return dt;
+}
+
+/**
+ * Get resto door
+ * @return
+ */
+DataType get_resto_door() {
+    DataType dt;
+    dt.point = restoDoor;
+    return dt;
+}
+
+/**
+ * Get kitchen door
+ * @return
+ */
+DataType get_kitchen_door() {
+    DataType dt;
+    dt.point = kitchenDoor;
     return dt;
 }
 

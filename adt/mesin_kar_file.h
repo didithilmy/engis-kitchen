@@ -3,7 +3,7 @@
 
 #include "boolean.h"
 #include <stdio.h>
-#define MARK 0
+#define MKF_MARK '.'
 
 /* State Mesin */
 extern char FCC;

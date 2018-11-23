@@ -14,7 +14,7 @@ boolean MKF_EndKata;
 Kata MKF_CKata;
 
 void MKF_Ignore_Blank() {
-    while(GetFCC() == BLANK && (GetFCC() != MARK)) {
+    while(GetFCC() == BLANK && (GetFCC() != MKF_MARK)) {
         ADVFILE();
     }
 }

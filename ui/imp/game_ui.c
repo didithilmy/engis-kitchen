@@ -69,7 +69,7 @@ void postStartGame() {
 
     MapWidth = publish_getval_event(GET_MAP_WIDTH).integer;
     MapHeight = publish_getval_event(GET_MAP_HEIGHT).integer;
-    buildGameScreen(MapHeight, MapWidth);
+    buildGameScreen(MapWidth, MapHeight);
 
     // Set name
     updateName(uiCName);
@@ -79,8 +79,8 @@ void postStartGame() {
 
     // Load Meja map
     // TODO change door coordinate
-    uiRestoDoor = MakePOINT(1, MapHeight);
-    uiKitchenDoor = MakePOINT(1, 1);
+    uiRestoDoor = publish_getval_event(GET_RESTO_DOOR_COORD).point;
+    uiKitchenDoor = publish_getval_event(GET_KITCHEN_DOOR_COORD).point;
     tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
     tabFood = publish_getval_event(GET_TAB_FOOD).tabFood;
 
