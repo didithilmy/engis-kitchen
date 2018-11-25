@@ -2,7 +2,7 @@ dist: xenial
 addons:
   apt:
     packages:
-    - ncurses
+    - libncurses-dev
 
 language: c
 install: make engi
