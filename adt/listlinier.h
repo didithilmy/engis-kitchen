@@ -16,7 +16,7 @@
 typedef union {
 	int integer;
     Customer *custAddress;
-	Order order;
+	Order *order;
 	Food *food;
 } infotype;
 
@@ -74,7 +74,7 @@ address Search (List L, infotype X);
 bool FSearch (List L, address P);
 /* Mencari apakah ada elemen list yang beralamat P */
 /* Mengirimkan true jika ada, false jika tidak ada */
-address SearchPrec (List L, infotype X);
+address SearchPrec (List L, address P);
 /* Mengirimkan address elemen sebelum elemen yang nilainya=X */
 /* Mencari apakah ada elemen list dengan Info(P)=X */
 /* Jika ada, mengirimkan address Prec, dengan Next(Prec)=P dan Info(P)=X. */

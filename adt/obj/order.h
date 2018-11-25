@@ -15,7 +15,8 @@ typedef struct tOrder {
     struct tMeja *meja;
 } Order;
 
-Order CreateOrder (Food *FoodName, struct tMeja *meja);
+void OrderAllocate (Order **order, Food *food, struct tMeja *meja);
+void OrderDeallocate(Order *order);
 /*Fungsi untuk melakukan order*/
 
 #endif //ENGIS_KITCHEN_ORDER_H

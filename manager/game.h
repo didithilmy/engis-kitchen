@@ -25,7 +25,5 @@ typedef struct {
 
 void game_manager_init();
 boolean driver(FORM *form, FIELD **fields, int ch);
-void clear_tray(); 
-void TakeOrder (Food * food, Meja * meja );
 
 #endif //ENGIS_KITCHEN_GAME_H

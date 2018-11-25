@@ -7,10 +7,11 @@
 
 
 #include "../order_list.h"
+#include "../headers.h"
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
-address InsOrderFirst (List *L, Order X) {
+address InsOrderFirst (List *L, Order *X) {
     infotype data;
     data.order = X;
 	address add = Alokasi(data);
@@ -22,7 +23,7 @@ address InsOrderFirst (List *L, Order X) {
 /* menambahkan elemen pertama dengan nilai X jika alokasi berhasil */
 
 
-address InsOrderLast (List *L, Order X) {
+address InsOrderLast (List *L, Order *X) {
     infotype data;
     data.order = X;
 
@@ -37,7 +38,7 @@ address InsOrderLast (List *L, Order X) {
 
 
 /*** PENGHAPUSAN ELEMEN ***/
-void DelOrderFirst (List *L, Order *X) {
+void DelOrderFirst (List *L, Order **X) {
     infotype data;
     DelVFirst(L, &data);
 
@@ -47,7 +48,7 @@ void DelOrderFirst (List *L, Order *X) {
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen pertama di-dealokasi */
 
-void DelOrderLast (List *L, Order *X) {
+void DelOrderLast (List *L, Order **X) {
     infotype data;
     DelVLast(L, &data);
 
@@ -57,3 +58,30 @@ void DelOrderLast (List *L, Order *X) {
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
 
+/**
+ * Find the Prec address of the Orderlist element with pointer to Order is order
+ * @param L List
+ * @param order pointer to order
+ * @return address of the precursor
+ */
+address SearchOrderPrec (List L, Order *order)
+{
+	// KAMUS
+	address Prec, P;
+	bool found;
+
+	// ALGORITMA
+    Prec = Nil;
+	P = First(L);
+	found = false;
+
+    while(P != Nil && !found) {
+        found = Info(P).order == order;
+        if(!found) {
+            Prec = P;
+            P = Next(P);
+        }
+    }
+
+    return Prec;
+}

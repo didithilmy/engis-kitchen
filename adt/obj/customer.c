@@ -38,5 +38,6 @@ void CustomerDeallocate(Customer *custAddress) {
 void MakeCustomer(Customer **custAddress) {
     *custAddress = CustomerAllocate();
     (*custAddress)->patience = CUSTOMER_INITIAL_PATIENCE;
+    (*custAddress)->order = NULL;
     (*custAddress)->N  = (rand() % 3 > 1) ? 2 : 4;
 }

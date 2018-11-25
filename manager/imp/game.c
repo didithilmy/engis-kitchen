@@ -21,8 +21,10 @@ void new_game(DataType name);
 void customer_arrive();
 void decrease_customer_patience();
 void decrement_life();
-boolean place_customer (Meja * meja);
+boolean place_customer ();
 void time_tick();
+void clear_tray();
+boolean TakeOrder ();
 
 // Variables of game parameters
 GameState currentGame;
@@ -93,6 +95,8 @@ void start_game() {
 }
 
 void do_command(DataType command) {
+    Meja *ptrMeja;
+    Food *ptrFood;
     Commands cmd = command.cmd;
 
     // TODO keeps track of command, if necessary
@@ -106,11 +110,13 @@ void do_command(DataType command) {
         case CMD_CLEARTRAY:
             clear_tray();
             time_tick();
+            break;
         case CMD_PLACE:
-            // If place customer is not successful, do not increment time (i.e. break)
-            if(place_customer(publish_getval_event(UI_GET_POINTED_MEJA).ptrMeja)) {
-                time_tick();
-            }
+            if (place_customer()) time_tick();
+            break;
+        case CMD_ORDER:
+            if (TakeOrder()) time_tick();
+            break;
         default:
             break;
     }
@@ -158,18 +164,44 @@ void clear_tray() {
     publish_1p_event(UI_SET_FOODSTACK, dt);
 }
 
-void TakeOrder (Food * food, Meja * meja) {
+/**
+ * Take order of a Meja
+ * @author Muhammad Yanza Hattari, NIM TODO ISI NIM WOE
+ */
+boolean TakeOrder() {
 	Order *order;
-	
-	address P = InsOrderLast (&OrderList, CreateOrder(food, meja));
-	order = &(Info(P).order);
+    Food *food;
+    TabFood *tabFood;
+    int randInd;
 
-    meja->custAddress->order = order;
-	
-	// Publish to UI
-    DataType dt;
-    dt.list = OrderList;
-    publish_1p_event(UI_SET_ORDERLIST, dt);
+    Meja *meja = publish_getval_event(UI_GET_POINTED_MEJA).ptrMeja;
+
+    if(meja != Nil) {
+        if(meja->custAddress != Nil) {
+            if(meja->custAddress->order != Nil) {
+                // Get random Food from TabFood
+                tabFood = publish_getval_event(GET_TAB_FOOD).tabFood;
+                randInd = rand() % tabFood->N;   // Generate random int from 0 to N
+                // Abolish 0
+                if (randInd == 0) randInd = 1;
+                food = &(tabFood->T[randInd]);
+
+                // Create Order
+                OrderAllocate(&order, food, meja);
+                InsOrderLast(&OrderList, order);
+
+                // Assign customer order to point the newly-made Order
+                meja->custAddress->order = order;
+
+                // Publish to UI
+                DataType dt;
+                dt.list = OrderList;
+                publish_1p_event(UI_SET_ORDERLIST, dt);
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -232,7 +264,23 @@ void decrease_customer_patience() {
 
             // Deallocate if patience is 0
             if (tabMeja->T[i].custAddress->patience == 0) {
+                // Remove associated Order, if any
+                if(tabMeja->T[i].custAddress->order != Nil) {
+                    Prec = SearchOrderPrec(OrderList, tabMeja->T[i].custAddress->order);
+
+                    if (Prec == Nil) {
+                        DelFirst(&OrderList, &Pdel);
+                    } else {
+                        DelAfter(&OrderList, &Pdel, Prec);
+                    }
+
+                    OrderDeallocate(tabMeja->T[i].custAddress->order);
+                }
+
+                // Deallocate memory space
                 CustomerDeallocate(tabMeja->T[i].custAddress);
+
+                // Empty the Meja
                 tabMeja->T[i].custAddress = Nil;
 
                 decrement_life();
@@ -246,6 +294,9 @@ void decrease_customer_patience() {
     DataType dt;
     dt.list = CustomerQueue;
     publish_1p_event(UI_SET_CUSTQUEUE, dt);
+
+    dt.list = OrderList;
+    publish_1p_event(UI_SET_ORDERLIST, dt);
 }
 
 /**
@@ -264,57 +315,58 @@ void decrement_life() {
 
 /**
  * Place customer onto table
- * @param meja
- * @param Q
  * @author Muhammad Aditya Hilmy, NIM 18217025
  * @author Zalikha Adiera Gambetta, NIM 18217027
  * @return customer placement successful
  */
-boolean place_customer (Meja * meja)
+boolean place_customer()
 {
     // kamus lokal
     boolean found;
     address P, Prec, Pdel;
+    Meja *meja = publish_getval_event(UI_GET_POINTED_MEJA).ptrMeja;
 
     // algoritma
-    if(!IsEmpty(CustomerQueue)) {
-        found = false;
-        Prec = Nil;
-        P = First(CustomerQueue);
-        while(P != Nil && !found) {
-            found = Info(P).custAddress->N <= meja->capacity;
-            if(!found) {
-                Prec = P;
-                P = Next(P);
+    if(meja != Nil) {
+        if(meja->custAddress == Nil) {
+            if(!IsEmpty(CustomerQueue)) {
+                found = false;
+                Prec = Nil;
+                P = First(CustomerQueue);
+                while(P != Nil && !found) {
+                    found = Info(P).custAddress->N <= meja->capacity;
+                    if(!found) {
+                        Prec = P;
+                        P = Next(P);
+                    }
+                }
+
+                if(found) {
+                    // If Precursor is Nil, it is the first element
+                    if(Prec == Nil) {
+                        DelFirst(&CustomerQueue, &Pdel);
+                    } else {
+                        DelAfter(&CustomerQueue, &Pdel, Prec);
+                    }
+
+                    // Place Customer to Meja
+                    meja->custAddress = Info(Pdel).custAddress;
+                    meja->custAddress->patience = CUSTOMER_INITIAL_PATIENCE;
+
+                    // Deallocate list element
+                    Dealokasi(&Pdel);
+
+                    // Publish to UI
+                    DataType dt;
+                    dt.list = CustomerQueue;
+                    publish_1p_event(UI_SET_CUSTQUEUE, dt);
+                    publish_event(UI_REFRESH_MAP);
+
+                    return true;
+                }
             }
         }
-
-        if(found) {
-            // If Precursor is Nil, it is the first element
-            if(Prec == Nil) {
-                DelFirst(&CustomerQueue, &Pdel);
-            } else {
-                DelAfter(&CustomerQueue, &Pdel, Prec);
-            }
-
-            // Place Customer to Meja
-            meja->custAddress = Info(Pdel).custAddress;
-            meja->custAddress->patience = CUSTOMER_INITIAL_PATIENCE;
-
-            // Deallocate list element
-            Dealokasi(&Pdel);
-
-            // Publish to UI
-            DataType dt;
-            dt.list = CustomerQueue;
-            publish_1p_event(UI_SET_CUSTQUEUE, dt);
-            publish_event(UI_REFRESH_MAP);
-
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
     }
+
+    return false;
 }

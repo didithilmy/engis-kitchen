@@ -12,6 +12,7 @@
 #include "../gameover_ui.h"
 #include "../../eventbus/eventbus.h"
 #include "../../adt/point.h"
+#include "../../adt/mesin_kata.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands(Kata kata);
@@ -237,6 +238,9 @@ void ExecuteCommands(Kata kata) {
         publish_event(GAME_OVER);
     } else if(CompareKata(kata, INS_PLACE, false)) {
         dt.cmd = CMD_PLACE;
+        publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(kata, INS_ORDER, false)) {
+        dt.cmd = CMD_ORDER;
         publish_1p_event(COMMAND, dt);
     }
 }
@@ -560,6 +564,7 @@ void buildGameScreen(int HORZ, int VERT) {
     // Initiate order panel
     printBorder((HEIGHT/2) + 1 + 3, HEIGHT + 3, 0, SIDE_PANEL_WIDTH);
     mvprintw((HEIGHT/2) + 2 + 3, 1, "%s", "Order");
+    orderWindow = newwin((HEIGHT/2) - 2, SIDE_PANEL_WIDTH - 1, (HEIGHT/2) + 1 + 4, 1);
 
     // Initiate food stack panel
     printBorder(3, 3 + (HEIGHT), WIDTH - SIDE_PANEL_WIDTH, WIDTH);
@@ -627,7 +632,24 @@ void updateFoodStack(DataType list) {
  * @param list
  */
 void updateOrderList(DataType list) {
+    address P;
+    Kata foodName;
+    int i;
+    List L = list.list;
 
+    wclear(orderWindow);
+    P = First(L);
+    while(P != Nil) {
+        foodName = Info(P).order->food->name;
+        // Print food name
+        for(i = 1; i <= foodName.Length; i++) {
+            wprintw(orderWindow, "%c", foodName.TabKata[i]);
+        }
+        wprintw(orderWindow, ", %d\n", Info(P).order->meja->tableNo);
+        P = Next(P);
+    }
+
+    wrefresh(orderWindow);
 }
 
 /**
