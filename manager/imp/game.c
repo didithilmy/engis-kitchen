@@ -133,9 +133,9 @@ void new_game(DataType name) {
  * @author Claudia Renata, NIM 18217048
  */
 void clear_tray() {
-    Food X;
+    Food *P;
     while(!IsEmpty(FoodStack)) {
-        Pop(&FoodStack, &X);
+        Pop(&FoodStack, &P);
     }
 
     // Publish to UI
@@ -191,10 +191,10 @@ void decrease_customer_patience() {
     Prec = Nil;
     P = First(CustomerQueue);
     while(P != Nil) {
-        CustomerPatience(P)--;
+        Info(P).custAddress->patience--;
 
         // Deallocate if patience is 0
-        if(CustomerPatience(P) == 0) {
+        if(Info(P).custAddress->patience == 0) {
             if(Prec == Nil) {
                 // First element
                 DelFirst(&CustomerQueue, &Pdel);
