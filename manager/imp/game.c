@@ -8,6 +8,7 @@
 
 #include "../game.h"
 
+
 void load_game();
 void save_game();
 void start_game();
@@ -16,6 +17,21 @@ void new_game(DataType name);
 
 // Variables of game parameters
 GameState currentGame;
+Stack FoodStack; 
+
+
+//variable global yang tipenya foodstack 
+// create empty stacknya di init 
+
+//bikin lagi prosedur clear_tray isinya while not empty pop dealokasi 
+
+void clear_tray() {
+	while(!IsEmpty(FoodStack)) {
+			Pop(&FoodStack, &X); 
+			Dealokasi(&FoodStack); 
+	}
+	
+}  
 
 void game_manager_init() {
     listen_event(NEW_GAME, &new_game);
@@ -26,7 +42,7 @@ void game_manager_init() {
 
     listen_1p_event(COMMAND, &do_command);
     listen_1p_event(NEW_GAME, &new_game);
-}
+    CreateEmpty(&FoodStack); 
 
 /**
  * Loads game from file
