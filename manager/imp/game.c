@@ -3,6 +3,7 @@
  * Game manager abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @author Muhammad Yanza Hattari, NIM 18217043
  * @file game.c
  */
 
@@ -18,7 +19,7 @@ void new_game(DataType name);
 // Variables of game parameters
 GameState currentGame;
 Stack FoodStack; 
-
+List OrderList;
 
 //variable global yang tipenya foodstack 
 // create empty stacknya di init 
@@ -34,6 +35,7 @@ void game_manager_init() {
     listen_1p_event(COMMAND, &do_command);
     listen_1p_event(NEW_GAME, &new_game);
     CreateEmpty(&FoodStack);
+	CreateEmpty(&OrderList);
 }
 
 /**
@@ -119,4 +121,13 @@ void clear_tray() {
     }
 
     // TODO publish to UI
+}
+
+void TakeOrder (Food * food, Meja * meja ) {
+	Order *order;
+	
+	address P = InsOrderLast (&OrderList, CreateOrder(food, meja));
+	order = &(Info(P).order);
+	
+	// TO DO publish to UI
 }

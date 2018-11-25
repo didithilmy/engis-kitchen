@@ -3,6 +3,8 @@
  * Game manager abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @author Muhammad Yanza Hattari, NIM 18217043
+ * @author Claudia Renata Maharani, NIM 18217048
  * @file game.h
  */
 #ifndef ENGIS_KITCHEN_GAME_H
@@ -24,5 +26,6 @@ typedef struct {
 void game_manager_init();
 boolean driver(FORM *form, FIELD **fields, int ch);
 void clear_tray(); 
+void TakeOrder (Food * food, Meja * meja );
 
 #endif //ENGIS_KITCHEN_GAME_H
