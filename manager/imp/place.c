@@ -22,7 +22,6 @@ void place_customer (Meja * meja, Queue * Q)
 			if ((meja.capacity == 2) && (SearchQ(Q,2))
 			{
 				Del(&Q,&C);
-				address P = 
 				Customer.patience = 30;
 				
 				customer->custAddress->meja = meja;
