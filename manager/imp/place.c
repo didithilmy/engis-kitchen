@@ -21,7 +21,7 @@ void place_customer (Meja * meja, Queue * Q)
 		{
 			if ((meja.capacity == 2) && (SearchQ(Q,2))
 			{
-				Del(&Q,&C);
+				Del(InfoHead(&Q),&C);
 				Customer.patience = 30;
 				
 				customer->custAddress->meja = meja;
@@ -30,7 +30,7 @@ void place_customer (Meja * meja, Queue * Q)
 			}
 			else if ((meja.capacity == 4) && (SearchQ(Q,4))
 			{
-				Del(&Q,&C);
+				Del(InfoHead(&Q),&C);
 				Customer.patience = 30;
 				
 				customer->custAddress->meja = meja;
