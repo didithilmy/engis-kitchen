@@ -10,6 +10,7 @@
 typedef struct {
     int N;  // No of people
     int patience;   // Patience level
+	Order * order;
 } Customer;
 
 #define CustomerPersons(P) (P)->N
