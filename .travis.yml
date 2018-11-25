@@ -4,5 +4,4 @@ addons:
     packages:
     - libncurses-dev
 
-language: c
 install: make engi
