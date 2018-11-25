@@ -7,7 +7,7 @@
 #include "../food_stack.h"
 
 // Operator Dasar Stack
-void Push (Stack *S, Food X) {
+void Push (Stack *S, Food *X) {
     infotype data;
     data.food = X;
 
@@ -18,7 +18,7 @@ void Push (Stack *S, Food X) {
 // F.S. X menjadi TOP yang baru, jika alokasi elemen baru berhasil.
 // Jika alokasi gagal, S tetap.
 
-void Pop (Stack *S, Food *X) {
+void Pop (Stack *S, Food **X) {
     infotype data;
     DelVFirst(S, &data);
 

@@ -16,8 +16,8 @@ typedef struct tCustomer {
 	struct tOrder *order;
 } Customer;
 
-#define CustomerPersons(P) (P)->info.custAddress->N
-#define CustomerPatience(P) (P)->info.custAddress->patience
+#define CustomerPersons(P) (P).N
+#define CustomerPatience(P) (P).patience
 
 /**
  * Customer allocate

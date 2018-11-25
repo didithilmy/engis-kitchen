@@ -29,13 +29,13 @@ Definisi stack dengan representasi berkait :
 //Konstruktor/Kreator
 
 // Operator Dasar Stack
-void Push (Stack *S, Food X);
+void Push (Stack *S, Food *X);
 // Menambahkan X sebagai elemen Stack S.
 // I.S. S mungkin kosong
 // F.S. X menjadi TOP yang baru, jika alokasi elemen baru berhasil.
 // Jika alokasi gagal, S tetap.
 
-void Pop (Stack *S, Food *X);
+void Pop (Stack *S, Food **X);
 // Menghapus X dari Stack S.
 // I.S. S tidak kosong
 // F.S. X adalah nilai elemen TOP yang lama, elemen top yang lama didealokasi,

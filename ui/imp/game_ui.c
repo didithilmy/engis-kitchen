@@ -599,7 +599,7 @@ void updateCustQueue(DataType list) {
     wclear(waitingCustWindow);
     P = First(Q);
     while(P != Nil) {
-        wprintw(waitingCustWindow, "%d person\n", CustomerPersons(P));
+        wprintw(waitingCustWindow, "%d person\n", CustomerPersons(CustomerInfo(P)));
         P = Next(P);
     }
 
