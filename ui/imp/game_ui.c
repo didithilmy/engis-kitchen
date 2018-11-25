@@ -10,6 +10,7 @@
 #include "../../ins_set.h"
 #include "../../adt/headers.h"
 #include "../gameover_ui.h"
+#include "../../eventbus/eventbus.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands(Kata kata);
@@ -21,6 +22,11 @@ void updateMoney(DataType money);
 void updateLife(DataType life);
 void updateTime(DataType time);
 void updateName(DataType name);
+
+void uiRefreshMap();
+void updateFoodStack(DataType list);
+void updateOrderList(DataType list);
+void updateCustQueue(DataType list);
 
 boolean isMoveLegal(POINT point);
 void movePlayer(POINT moveTo);
@@ -56,6 +62,11 @@ void game_ui_init() {
     listen_1p_event(UI_SET_LIFE, &updateLife);
     listen_1p_event(UI_SET_TIME, &updateTime);
     listen_1p_event(UI_SET_MONEY, &updateMoney);
+
+    listen_event(UI_REFRESH_MAP, &uiRefreshMap);
+    listen_1p_event(UI_SET_FOODSTACK, &updateFoodStack);
+    listen_1p_event(UI_SET_ORDERLIST, &updateOrderList);
+    listen_1p_event(UI_SET_CUSTQUEUE, &updateCustQueue);
 }
 
 /**
@@ -334,8 +345,8 @@ void loadRestaurantLayout(TabMeja T, POINT door) {
                 updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, "X");
                 updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, "X");
             } else {
-                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, CustomerPersons(meja.custAddress) == 4 ? "C" : "X");
-                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, CustomerPersons(meja.custAddress) == 4 ? "C" : "X");
+                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y - 1, meja.custAddress->N == 4 ? "C" : "X");
+                updateMapWindowCharacter(meja.coordinate.X, meja.coordinate.Y + 1, meja.custAddress->N == 4 ? "C" : "X");
             }
         }
     }
@@ -514,6 +525,7 @@ void buildGameScreen(int HORZ, int VERT) {
     // Initiate queue panel
     printBorder(3, 3 + (HEIGHT/2), 0, SIDE_PANEL_WIDTH);
     mvprintw(4, 1, "%s", "Waiting Cust.");
+    waitingCustWindow = newwin((HEIGHT/2) - 2, SIDE_PANEL_WIDTH - 1, 5, 1);
 
     // Initiate order panel
     printBorder((HEIGHT/2) + 1 + 3, HEIGHT + 3, 0, SIDE_PANEL_WIDTH);
@@ -559,4 +571,37 @@ void buildGameScreen(int HORZ, int VERT) {
     }
 
     refresh();
+}
+
+/**
+ * Refresh map
+ */
+void uiRefreshMap() {
+    if(isInRestaurant) {
+        loadRestaurantLayout(tabMeja, uiRestoDoor);
+    } else {
+        loadKitchenLayout(tabFood, uiKitchenDoor);
+    }
+}
+
+void updateFoodStack(DataType list) {
+
+}
+
+void updateOrderList(DataType list) {
+
+}
+
+void updateCustQueue(DataType list) {
+    address P;
+    Queue Q = list.list;
+
+    wclear(waitingCustWindow);
+    P = First(Q);
+    while(P != Nil) {
+        wprintw(waitingCustWindow, "%d person\n", CustomerPersons(P));
+        P = Next(P);
+    }
+
+    wrefresh(waitingCustWindow);
 }

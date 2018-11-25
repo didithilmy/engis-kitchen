@@ -25,6 +25,7 @@ typedef union {
     TabFood tabFood;
     MATRIKS matriks;
     POINT point;
+    List list;
 } DataType;
 
 

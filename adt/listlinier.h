@@ -17,7 +17,7 @@ typedef union {
 	int integer;
     Customer *custAddress;
 	Order order;
-	Food food;
+	Food *food;
 } infotype;
 
 typedef struct tElmtlist *address;

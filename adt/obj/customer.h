@@ -5,6 +5,7 @@
 #ifndef ENGIS_KITCHEN_CUSTOMER_H
 #define ENGIS_KITCHEN_CUSTOMER_H
 
+#include <stdlib.h>
 #include "order.h"
 
 #define CUSTOMER_INITIAL_PATIENCE 30
@@ -15,8 +16,8 @@ typedef struct tCustomer {
 	struct tOrder *order;
 } Customer;
 
-#define CustomerPersons(P) (P)->N
-#define CustomerPatience(P) (P)->patience
+#define CustomerPersons(P) (P)->info.custAddress->N
+#define CustomerPatience(P) (P)->info.custAddress->patience
 
 /**
  * Customer allocate

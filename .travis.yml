@@ -1,0 +1,8 @@
+dist: xenial
+addons:
+  apt:
+    packages:
+    - ncurses
+
+language: c
+install: make engi
