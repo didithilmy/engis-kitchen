@@ -6,16 +6,16 @@
 #define ENGIS_KITCHEN_ORDER_H
 
 #include "../mesin_kata.h"
+#include "food.h"
 #include "meja.h"
-#include "food.h" 
 
 
 typedef struct tOrder {
-    Food *food;
-    Meja *meja;
+    struct tFood *food;
+    struct tMeja *meja;
 } Order;
 
-Order CreateOrder (Food *FoodName , Meja *meja);
+Order CreateOrder (Food *FoodName, struct tMeja *meja);
 /*Fungsi untuk melakukan order*/
 
 #endif //ENGIS_KITCHEN_ORDER_H

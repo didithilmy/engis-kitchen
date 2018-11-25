@@ -9,10 +9,10 @@
 
 #define CUSTOMER_INITIAL_PATIENCE 30
 
-typedef struct {
+typedef struct tCustomer {
     int N;  // No of people
     int patience;   // Patience level
-	Order * order;
+	struct tOrder *order;
 } Customer;
 
 #define CustomerPersons(P) (P)->N

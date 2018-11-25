@@ -4,7 +4,7 @@
 
 #include "order.h"
 
-Order CreateOrder (Food *FoodName , Meja *meja) {
+Order CreateOrder (Food *FoodName, Meja *meja) {
 	
 	//Kamus Lokal
 	Order order; 

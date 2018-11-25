@@ -10,11 +10,11 @@
 #include "../point.h"
 #include "customer.h"
 
-typedef struct {
+typedef struct tMeja {
     POINT coordinate;
     int capacity;
     int tableNo;
-    Customer *custAddress;
+    struct tCustomer *custAddress;
 } Meja;
 
 typedef struct {

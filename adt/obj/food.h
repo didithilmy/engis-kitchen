@@ -10,7 +10,7 @@
 #include "../mesin_kata.h"
 #include "../point.h"
 
-typedef struct {
+typedef struct tFood {
 	POINT coordinate;
     Kata name;
 } Food;
