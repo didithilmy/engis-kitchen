@@ -20,9 +20,10 @@ typedef union {
     char *string;
     Kata kata;
     Commands cmd;
-    Meja meja;
-    TabMeja tabMeja;
-    TabFood tabFood;
+    Meja *ptrMeja;
+    Food *ptrFood;
+    TabMeja *tabMeja;
+    TabFood *tabFood;
     MATRIKS matriks;
     POINT point;
     List list;

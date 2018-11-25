@@ -11,6 +11,7 @@
 #include "../../adt/headers.h"
 #include "../gameover_ui.h"
 #include "../../eventbus/eventbus.h"
+#include "../../adt/point.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands(Kata kata);
@@ -31,6 +32,9 @@ void updateCustQueue(DataType list);
 boolean isMoveLegal(POINT point);
 void movePlayer(POINT moveTo);
 void updateTooltip(POINT loc);
+
+DataType uiGetPointedMeja();
+DataType uiGetPointedFood();
 
 // Global variables
 DataType uiCMoney, uiCLife, uiCTime, uiCName;
@@ -67,6 +71,9 @@ void game_ui_init() {
     listen_1p_event(UI_SET_FOODSTACK, &updateFoodStack);
     listen_1p_event(UI_SET_ORDERLIST, &updateOrderList);
     listen_1p_event(UI_SET_CUSTQUEUE, &updateCustQueue);
+
+    listen_getval_event(UI_GET_POINTED_MEJA, &uiGetPointedMeja);
+    listen_getval_event(UI_GET_POINTED_FOOD, &uiGetPointedFood);
 }
 
 /**
@@ -92,8 +99,8 @@ void postStartGame() {
     // TODO change door coordinate
     uiRestoDoor = publish_getval_event(GET_RESTO_DOOR_COORD).point;
     uiKitchenDoor = publish_getval_event(GET_KITCHEN_DOOR_COORD).point;
-    tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
-    tabFood = publish_getval_event(GET_TAB_FOOD).tabFood;
+    tabMeja = *publish_getval_event(GET_TAB_MEJA).tabMeja;
+    tabFood = *publish_getval_event(GET_TAB_FOOD).tabFood;
 
     // Set player cursor to be the resto door
     player_position = uiRestoDoor;
@@ -228,6 +235,9 @@ void ExecuteCommands(Kata kata) {
         }
     } else if(CompareKata(kata, INS_DEBUG_OVER, false)) {
         publish_event(GAME_OVER);
+    } else if(CompareKata(kata, INS_PLACE, false)) {
+        dt.cmd = CMD_PLACE;
+        publish_1p_event(COMMAND, dt);
     }
 }
 
@@ -351,12 +361,23 @@ void loadRestaurantLayout(TabMeja T, POINT door) {
         }
     }
 
-    // Put player on door
-    player_position.X = door.X;
-    player_position.Y = door.Y;
+    // Put player on position
+    if(isInRestaurant) {
+        // If currently in restaurant WHEN the method is invoked, do not change the position of the player
 
-    updateMapWindowCharacter(door.X, door.Y, "P");
+        updateMapWindowCharacter(door.X, door.Y, "D");
+        updateMapWindowCharacter(player_position.X, player_position.Y, "P");
+    } else {
+        // Else, place player on door
+
+        player_position.X = door.X;
+        player_position.Y = door.Y;
+
+        updateMapWindowCharacter(door.X, door.Y, "P");
+    }
+
     doupdate();
+    isInRestaurant = true;
 }
 
 /**
@@ -372,12 +393,23 @@ void loadKitchenLayout(TabFood T, POINT door) {
         updateMapWindowCharacter(food.coordinate.X, food.coordinate.Y, "M");
     }
 
-    // Put player on door
-    player_position.X = door.X;
-    player_position.Y = door.Y;
+    // Put player on position
+    if(!isInRestaurant) {
+        // If currently in kitchen WHEN the method is invoked, do not change the position of the player
 
-    updateMapWindowCharacter(door.X, door.Y, "P");
+        updateMapWindowCharacter(door.X, door.Y, "D");
+        updateMapWindowCharacter(player_position.X, player_position.Y, "P");
+    } else {
+        // Else, place player on door
+
+        player_position.X = door.X;
+        player_position.Y = door.Y;
+
+        updateMapWindowCharacter(door.X, door.Y, "P");
+    }
     doupdate();
+
+    isInRestaurant = false;
 }
 
 /**
@@ -420,12 +452,10 @@ void movePlayer(POINT moveTo) {
         // Check if the moveTo point is a door in its respective layout
         if(moveTo.X == uiRestoDoor.X && moveTo.Y == uiRestoDoor.Y && isInRestaurant) {
             // If it goes to a door, change layout to kitchen
-            isInRestaurant = false;
             clearMapWindows();
             loadKitchenLayout(tabFood, uiKitchenDoor);
         } else if(moveTo.X == uiKitchenDoor.X && moveTo.Y == uiKitchenDoor.Y && !isInRestaurant) {
             // If it goes to a door, change layout to restaurant
-            isInRestaurant = true;
             clearMapWindows();
             loadRestaurantLayout(tabMeja, uiRestoDoor);
         } else {
@@ -584,14 +614,26 @@ void uiRefreshMap() {
     }
 }
 
+/**
+ * Update food stack
+ * @param list
+ */
 void updateFoodStack(DataType list) {
 
 }
 
+/**
+ * Update order list
+ * @param list
+ */
 void updateOrderList(DataType list) {
 
 }
 
+/**
+ * Update customer queue
+ * @param list
+ */
 void updateCustQueue(DataType list) {
     address P;
     Queue Q = list.list;
@@ -604,4 +646,50 @@ void updateCustQueue(DataType list) {
     }
 
     wrefresh(waitingCustWindow);
+}
+
+/**
+ * Get currently pointed Meja, if any
+ * @return pointer to pointed Meja
+ */
+DataType uiGetPointedMeja() {
+    // Local variables
+    DataType dt;
+    MATRIKS matriks;
+    Kata foodName;
+
+    dt.ptrMeja = Nil;
+
+    if(isInRestaurant) {
+        matriks = publish_getval_event(GET_RESTO_MATRIX).matriks;
+
+        if (ElmtType(matriks, player_position.Y, player_position.X) == M_MEJA) {
+            dt.ptrMeja = ElmtMeja(matriks, player_position.Y, player_position.X);
+        }
+    }
+
+    return dt;
+}
+
+/**
+ * Get currently pointed Food, if any
+ * @return pointer to pointed Food
+ */
+DataType uiGetPointedFood() {
+    // Local variables
+    DataType dt;
+    MATRIKS matriks;
+    Kata foodName;
+
+    dt.ptrFood = Nil;
+
+    if(!isInRestaurant) {
+        matriks = publish_getval_event(GET_KITCHEN_MATRIX).matriks;
+
+        if (ElmtType(matriks, player_position.Y, player_position.X) == M_FOOD) {
+            dt.ptrFood = ElmtFood(matriks, player_position.Y, player_position.X);
+        }
+    }
+
+    return dt;
 }

@@ -21,6 +21,8 @@ void new_game(DataType name);
 void customer_arrive();
 void decrease_customer_patience();
 void decrement_life();
+boolean place_customer (Meja * meja);
+void time_tick();
 
 // Variables of game parameters
 GameState currentGame;
@@ -99,13 +101,25 @@ void do_command(DataType command) {
         case CMD_GD:
         case CMD_GR:
         case CMD_GL:
+            time_tick();
             break;
         case CMD_CLEARTRAY:
             clear_tray();
+            time_tick();
+        case CMD_PLACE:
+            // If place customer is not successful, do not increment time (i.e. break)
+            if(place_customer(publish_getval_event(UI_GET_POINTED_MEJA).ptrMeja)) {
+                time_tick();
+            }
         default:
             break;
     }
+}
 
+/**
+ * Do action when the time tticks
+ */
+void time_tick() {
     currentGame.time++;
 
     DataType dt;
@@ -210,16 +224,16 @@ void decrease_customer_patience() {
     }
 
     // Iterate TabMeja
-    TabMeja tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
+    TabMeja *tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
     int i;
-    for(i = 1; i <= tabMeja.N; i++) {
-        if(tabMeja.T[i].custAddress != Nil) {
-            tabMeja.T[i].custAddress->patience--;
+    for(i = 1; i <= tabMeja->N; i++) {
+        if(tabMeja->T[i].custAddress != Nil) {
+            tabMeja->T[i].custAddress->patience--;
 
             // Deallocate if patience is 0
-            if (tabMeja.T[i].custAddress->patience == 0) {
-                CustomerDeallocate(tabMeja.T[i].custAddress);
-                tabMeja.T[i].custAddress = Nil;
+            if (tabMeja->T[i].custAddress->patience == 0) {
+                CustomerDeallocate(tabMeja->T[i].custAddress);
+                tabMeja->T[i].custAddress = Nil;
 
                 decrement_life();
             }
@@ -227,7 +241,7 @@ void decrease_customer_patience() {
     }
 
     // Invoke UI update
-    //publish_event(UI_REFRESH_MAP);
+    publish_event(UI_REFRESH_MAP);
 
     DataType dt;
     dt.list = CustomerQueue;
@@ -245,5 +259,62 @@ void decrement_life() {
     publish_1p_event(UI_SET_LIFE, dt);
     if(currentGame.life == 0) {
         publish_event(GAME_OVER);
+    }
+}
+
+/**
+ * Place customer onto table
+ * @param meja
+ * @param Q
+ * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @author Zalikha Adiera Gambetta, NIM 18217027
+ * @return customer placement successful
+ */
+boolean place_customer (Meja * meja)
+{
+    // kamus lokal
+    boolean found;
+    address P, Prec, Pdel;
+
+    // algoritma
+    if(!IsEmpty(CustomerQueue)) {
+        found = false;
+        Prec = Nil;
+        P = First(CustomerQueue);
+        while(P != Nil && !found) {
+            found = Info(P).custAddress->N <= meja->capacity;
+            if(!found) {
+                Prec = P;
+                P = Next(P);
+            }
+        }
+
+        if(found) {
+            // If Precursor is Nil, it is the first element
+            if(Prec == Nil) {
+                DelFirst(&CustomerQueue, &Pdel);
+            } else {
+                DelAfter(&CustomerQueue, &Pdel, Prec);
+            }
+
+            // Place Customer to Meja
+            meja->custAddress = Info(Pdel).custAddress;
+            meja->custAddress->patience = CUSTOMER_INITIAL_PATIENCE;
+
+            // Deallocate list element
+            Dealokasi(&Pdel);
+
+            // Publish to UI
+            DataType dt;
+            dt.list = CustomerQueue;
+            publish_1p_event(UI_SET_CUSTQUEUE, dt);
+            publish_event(UI_REFRESH_MAP);
+
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
     }
 }

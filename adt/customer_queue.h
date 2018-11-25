@@ -9,7 +9,7 @@
 
 #include "listlinier.h"
 
-#define CustomerInfo(P) *((Info(P)).custAddress)
+#define CustomerInfo(P) *(Info(P).custAddress)
 #define CustomerAddress(P) Info(P).custAddress
 #define CustomerInfoHead(Q) CustomerInfo(Head(Q))
 #define CustomerInfoTail(Q) CustomerInfo(Tail(Q))

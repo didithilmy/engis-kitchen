@@ -192,7 +192,7 @@ DataType get_map_height() {
  */
 DataType get_tab_meja() {
     DataType dt;
-    dt.tabMeja = tabMeja;
+    dt.tabMeja = &tabMeja;
 
     return dt;
 }
@@ -204,7 +204,7 @@ DataType get_tab_meja() {
  */
 DataType get_tab_food() {
     DataType dt;
-    dt.tabFood = tabFood;
+    dt.tabFood = &tabFood;
 
     return dt;
 }
