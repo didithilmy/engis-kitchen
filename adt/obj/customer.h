@@ -5,6 +5,8 @@
 #ifndef ENGIS_KITCHEN_CUSTOMER_H
 #define ENGIS_KITCHEN_CUSTOMER_H
 
+#include "order.h"
+
 #define CUSTOMER_INITIAL_PATIENCE 30
 
 typedef struct {
