@@ -2,6 +2,7 @@
  * Order list abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @author Muhammad Yanza Hattari, NIM 18217043
  */
 
 
@@ -9,22 +10,25 @@
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
-void InsOrderFirst (List *L, Order X) {
+address InsOrderFirst (List *L, Order X) {
     infotype data;
     data.order = X;
-
-    InsVFirst(L, data);
+	address add = Alokasi(data);
+    InsertFirst(L, add);
+	return add;
 }
 /* I.S. L mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen pertama dengan nilai X jika alokasi berhasil */
 
 
-void InsOrderLast (List *L, Order X) {
+address InsOrderLast (List *L, Order X) {
     infotype data;
     data.order = X;
 
-    InsVLast(L, data);
+	address add = Alokasi(data);
+	InsertLast(L,add);
+	return add;
 }
 /* I.S. L mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */

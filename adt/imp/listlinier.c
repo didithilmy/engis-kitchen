@@ -1,3 +1,11 @@
+/**
+ * Order list abstraction
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @author Muhammad Yanza Hattari, NIM 18217043
+ */
+
+
 /* File : listlinier.h */
 /* contoh ADT list berkait dengan representasi fisik pointer  */
 /* Representasi address dengan pointer */
