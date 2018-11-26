@@ -8,8 +8,5 @@ services:
   - docker
 
 language: c
-install: make engi
 script:
-  - docker build -t didithilmy/engis-kitchen .
-  - docker tag didithilmy/engis-kitchen node2.didithilmy.com/engis-kitchen
-  - docker push node2.didithilmy.com/engis-kitchen
+  - make engi
