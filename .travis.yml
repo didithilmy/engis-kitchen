@@ -3,5 +3,5 @@ addons:
   apt:
     packages:
     - libncurses-dev
-
-install: make engi
+language: c
+script: make engi
