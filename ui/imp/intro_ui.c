@@ -8,6 +8,7 @@
 
 #include "../intro_ui.h"
 #include "../../ins_set.h"
+#include "../../eventbus/eventbus.h"
 
 void intro_driver(FORM *form, FIELD **fields, int ch);
 void Intro_ExecuteCommands();
@@ -77,8 +78,13 @@ void Intro_ExecuteCommands() {
     if(CompareKata(CKata, INS_EXIT, false)) {
         keep_requesting = false;
     } else if(CompareKata(CKata, INS_START, false)) {
-        keep_requesting = false;
-        retval = 1;
+        // Check if game exists
+        if(publish_getval_event(IS_GAME_EXISTS).integer) {
+            keep_requesting = false;
+            retval = 1;
+        } else {
+            promptName();
+        }
     } else if(CompareKata(CKata, INS_NEW, false)) {
         promptName();
     } else if(CompareKata(CKata, INS_LOAD, false)) {

@@ -9,30 +9,32 @@
 
 #include <stdlib.h>
 #include "../game.h"
-#include "../../eventbus/eventbus.h"
 #include "../../adt/headers.h"
 
 
 void load_game();
 void save_game();
 void start_game();
+void game_over();
 void do_command(DataType command);
 void new_game(DataType name);
 void customer_arrive();
 void decrease_customer_patience();
 void decrement_life();
-boolean place_customer ();
+boolean place_customer();
 void time_tick();
 void clear_tray();
 boolean TakeOrder();
 boolean TakeFood();
 boolean GiveFood();
+DataType is_game_exists();
 
 // Variables of game parameters
 GameState currentGame;
 Stack FoodStack; 
 List OrderList;
 Queue CustomerQueue;
+boolean GameExists;
 
 int timeToCustomerArrival;
 
@@ -44,14 +46,18 @@ void game_manager_init() {
     listen_event(NEW_GAME, &new_game);
     listen_event(LOAD_GAME, &load_game);
     listen_event(SAVE_GAME, &save_game);
-
     listen_event(START_GAME, &start_game);
+    listen_event(GAME_OVER, &game_over);
 
     listen_1p_event(COMMAND, &do_command);
     listen_1p_event(NEW_GAME, &new_game);
+
+    listen_getval_event(IS_GAME_EXISTS, &is_game_exists);
     CreateEmpty(&FoodStack);
 	CreateEmpty(&OrderList);
     CreateEmpty(&CustomerQueue);
+
+    GameExists = false;
 }
 
 /**
@@ -79,8 +85,8 @@ void save_game() {
  * Called when a start game instruction is requested
  */
 void start_game() {
-    // TODO read files and load
     DataType name, time, life, money;
+    DataType dt;
 
     name.kata = currentGame.player_name;
     time.integer = currentGame.time;
@@ -92,8 +98,30 @@ void start_game() {
     publish_1p_event(UI_SET_LIFE, life);
     publish_1p_event(UI_SET_MONEY, money);
 
+    dt.list = OrderList;
+    publish_1p_event(UI_SET_ORDERLIST, dt);
+
+    dt.list = FoodStack;
+    publish_1p_event(UI_SET_FOODSTACK, dt);
+
+    dt.list = CustomerQueue;
+    publish_1p_event(UI_SET_CUSTQUEUE, dt);
+
+    publish_event(UI_REFRESH_MAP);
+
     // Randomize time to cust arrival
     timeToCustomerArrival = (rand() % 20) + 10;
+}
+
+/**
+ * Returns is game exists
+ * @return
+ */
+DataType is_game_exists() {
+    DataType dt;
+    dt.integer = GameExists;
+
+    return dt;
 }
 
 void do_command(DataType command) {
@@ -149,12 +177,50 @@ void time_tick() {
  * @param name player's name
  */
 void new_game(DataType name) {
-    // TODO initialize default values
+    int i;
+    address Pdel;
+
     currentGame.time = 0;
     currentGame.life = 5;
     currentGame.money = 0;
     currentGame.player_name = name.kata;
+
+    // Deallocate customer queue
+    while(!IsEmpty(CustomerQueue)) {
+        DelFirst(&CustomerQueue, &Pdel);
+        CustomerDeallocate(Pdel->info.custAddress);
+        Dealokasi(&Pdel);
+    }
+
+    // Deallocate Order List
+    while(!IsEmpty(OrderList)) {
+        DelFirst(&OrderList, &Pdel);
+        OrderDeallocate(Pdel->info.order);
+        Dealokasi(&Pdel);
+    }
+
+    // Deallocate food stack
+    DelAll(&FoodStack);
+
+    // Iterate TabMeja and deallocate Customer, if any
+    TabMeja *tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
+    for(i = 1; i <= tabMeja->N; i++) {
+        if(tabMeja->T[i].custAddress != Nil) {
+            CustomerDeallocate(tabMeja->T[i].custAddress);
+            tabMeja->T[i].custAddress = Nil;
+        }
+    }
+
+    GameExists = true;
 }
+
+/**
+ * Called when game is over
+ */
+void game_over() {
+    GameExists = false;
+}
+
 
 /**
  * Clears stack
@@ -387,12 +453,14 @@ boolean place_customer()
 boolean TakeFood() {
     Food *food = publish_getval_event(UI_GET_POINTED_FOOD).ptrFood;
     if(food != Nil) {
-        Push(&FoodStack, food);
-        DataType dt;
-        dt.list = FoodStack;
-        publish_1p_event(UI_SET_FOODSTACK, dt);
+        if(NbElmt(FoodStack) < MAX_FOOD_STACK_ELMT) {
+            Push(&FoodStack, food);
+            DataType dt;
+            dt.list = FoodStack;
+            publish_1p_event(UI_SET_FOODSTACK, dt);
 
-        return true;
+            return true;
+        }
     }
     return false;
 }

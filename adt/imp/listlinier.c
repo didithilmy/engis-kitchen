@@ -196,23 +196,6 @@ void DelVLast (List *L, infotype *X)
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
 {
-    // TODO cek dong pls -didit
-	/* KAMUS */
-	//address Last, PrecLast;
-	/* ALGORITMA */
-	/*Last = First(*L);
-	PrecLast = Nil;
-	while (Next(Last) != Nil){
-		PrecLast = Last;
-		Last = Next(Last);
-	}
-	*X = Info(Last);
-	if (PrecLast == Nil){
-		First(*L) = Nil;
-	} else{
-		Next(PrecLast) = Nil;
-	}*/
-
     address P;
     DelLast(L, &P);
     *X = Info(P);
@@ -339,6 +322,18 @@ void DelAfter (List *L, address *Pdel, address Prec)
     // Check if Next(Prec) is Nil. If it is, Prec must be the last element
     if(Next(Prec) == Nil) {
         Last(*L) = Prec;
+    }
+}
+
+/**
+ * Delete all elements in list
+ * @param L
+ */
+void DelAll(List *L) {
+    address Pdel;
+    while(!IsEmpty(*L)) {
+        DelFirst(L, &Pdel);
+        Dealokasi(&Pdel);
     }
 }
 

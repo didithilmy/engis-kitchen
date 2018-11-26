@@ -19,6 +19,7 @@ void ExecuteCommands(Kata kata);
 void postStartGame();
 void onExitGame();
 void onGameOver();
+void uiNewGame();
 
 void updateMoney(DataType money);
 void updateLife(DataType life);
@@ -39,7 +40,9 @@ DataType uiGetPointedFood();
 
 // Global variables
 DataType uiCMoney, uiCLife, uiCTime, uiCName;
-boolean isGameRunning, isGameOver;
+DataType uiFoodStack, uiCustQueue, uiOrderList;
+
+boolean isGameRunning;
 POINT uiRestoDoor, uiKitchenDoor;
 TabMeja tabMeja;
 TabFood tabFood;
@@ -58,11 +61,11 @@ POINT player_position;
  */
 void game_ui_init() {
     isGameRunning = false;
-    isGameOver = false;
     // Subscribe to events
     listen_post_event(START_GAME, &postStartGame);
     listen_event(EXIT_GAME, &onExitGame);
     listen_event(GAME_OVER, &onGameOver);
+    listen_event(NEW_GAME, &uiNewGame);
     listen_1p_event(UI_SET_NAME, &updateName);
     listen_1p_event(UI_SET_LIFE, &updateLife);
     listen_1p_event(UI_SET_TIME, &updateTime);
@@ -78,6 +81,16 @@ void game_ui_init() {
 }
 
 /**
+ * Called when new game is created
+ */
+void uiNewGame() {
+    // Set player cursor to be the resto door
+    uiRestoDoor = publish_getval_event(GET_RESTO_DOOR_COORD).point;
+    player_position = uiRestoDoor;
+    isInRestaurant = true;
+}
+
+/**
  * Called when the game is started (post event)
  */
 void postStartGame() {
@@ -90,24 +103,26 @@ void postStartGame() {
     MapHeight = publish_getval_event(GET_MAP_HEIGHT).integer;
     buildGameScreen(MapWidth, MapHeight);
 
-    // Set name
+    // Set params
     updateName(uiCName);
     updateTime(uiCTime);
     updateLife(uiCLife);
     updateMoney(uiCMoney);
+    updateCustQueue(uiCustQueue);
+    updateFoodStack(uiFoodStack);
+    updateOrderList(uiOrderList);
 
     // Load Meja map
-    // TODO change door coordinate
     uiRestoDoor = publish_getval_event(GET_RESTO_DOOR_COORD).point;
     uiKitchenDoor = publish_getval_event(GET_KITCHEN_DOOR_COORD).point;
     tabMeja = *publish_getval_event(GET_TAB_MEJA).tabMeja;
     tabFood = *publish_getval_event(GET_TAB_FOOD).tabFood;
 
-    // Set player cursor to be the resto door
-    player_position = uiRestoDoor;
-
-    loadRestaurantLayout(tabMeja, uiRestoDoor);
-    isInRestaurant = true;
+    // Load layout
+    if(isInRestaurant)
+        loadRestaurantLayout(tabMeja, uiRestoDoor);
+    else
+        loadKitchenLayout(tabFood, uiKitchenDoor);
 
     // Move cursor to beginning of field
     form_driver(commandForm, REQ_BEG_FIELD);
@@ -142,7 +157,6 @@ void onExitGame() {
  */
 void onGameOver() {
     isGameRunning = false;
-    isGameOver = true;
     showGameOver();
 }
 
@@ -573,12 +587,12 @@ void buildGameScreen(int HORZ, int VERT) {
     // Initiate order panel
     printBorder((HEIGHT/2) + 1 + 3, HEIGHT + 3, 0, SIDE_PANEL_WIDTH);
     mvprintw((HEIGHT/2) + 2 + 3, 1, "%s", "Order");
-    orderWindow = newwin((HEIGHT/2) - 4, SIDE_PANEL_WIDTH - 1, (HEIGHT/2) + 1 + 6, 1);
+    orderWindow = newwin((HEIGHT/2) - 3, SIDE_PANEL_WIDTH - 1, (HEIGHT/2) + 6, 1);
 
     // Initiate food stack panel
     printBorder(3, 3 + (HEIGHT), WIDTH - SIDE_PANEL_WIDTH, WIDTH);
     mvprintw(4, WIDTH - SIDE_PANEL_WIDTH + 1, "%s", "Food Stack");
-    foodStackWindow = newwin(HEIGHT - 3, SIDE_PANEL_WIDTH - 1, 6, WIDTH - SIDE_PANEL_WIDTH + 1);
+    foodStackWindow = newwin(HEIGHT - 2, SIDE_PANEL_WIDTH - 1, 5, WIDTH - SIDE_PANEL_WIDTH + 1);
 
     // Remaining width
     int remWidth = WIDTH - (SIDE_PANEL_WIDTH + 1);
@@ -638,6 +652,8 @@ void updateFoodStack(DataType list) {
     int i;
     Stack S = list.list;
 
+    uiFoodStack = list;
+
     wclear(foodStackWindow);
     P = First(S);
     while(P != Nil) {
@@ -663,6 +679,8 @@ void updateOrderList(DataType list) {
     int i;
     List L = list.list;
 
+    uiOrderList = list;
+
     wclear(orderWindow);
     P = First(L);
     while(P != Nil) {
@@ -685,6 +703,8 @@ void updateOrderList(DataType list) {
 void updateCustQueue(DataType list) {
     address P;
     Queue Q = list.list;
+
+    uiCustQueue = list;
 
     wclear(waitingCustWindow);
     P = First(Q);
