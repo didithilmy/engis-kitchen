@@ -8,7 +8,6 @@
 
 #include "../intro_ui.h"
 #include "../../ins_set.h"
-#include "../../eventbus/eventbus.h"
 
 void intro_driver(FORM *form, FIELD **fields, int ch);
 void Intro_ExecuteCommands();
@@ -154,17 +153,4 @@ void buildIntroScreen() {
     refresh();
 
     form_driver(nameForm, REQ_BEG_FIELD);
-
-    /*mvwprintw(window, 20, 2, "New Game (F1)");
-
-    wPrintBorder(window, 19, 21, 18, 36);
-    mvwprintw(window, 20, 20, "Start Game (F2)");
-
-    wPrintBorder(window, 19, 21, 38, 55);
-    mvwprintw(window, 20, 40, "Load Game (F3)");
-
-    wPrintBorder(window, 19, 21, 57, 69);
-    mvwprintw(window, 20, 59, "Exit (F4)");*/
-
-    //wrefresh(window);
 }

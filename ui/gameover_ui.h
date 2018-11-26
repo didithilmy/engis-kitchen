@@ -18,7 +18,6 @@
 
 #include "ui_commons.h"
 
-void gameover_ui_init();
 void buildGameOverScreen();
 void showGameOver();
 
