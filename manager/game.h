@@ -13,7 +13,9 @@
 #include "../ins_set.h"
 #include "../ui/game_ui.h"
 #include "../adt/headers.h"
-#include "../adt/food_stack.h" 
+#include "../adt/food_stack.h"
+
+#define MONEY_SALES_INCREMENT 100
 
 typedef struct {
     Kata player_name;

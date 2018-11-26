@@ -24,7 +24,9 @@ void decrement_life();
 boolean place_customer ();
 void time_tick();
 void clear_tray();
-boolean TakeOrder ();
+boolean TakeOrder();
+boolean TakeFood();
+boolean GiveFood();
 
 // Variables of game parameters
 GameState currentGame;
@@ -117,6 +119,12 @@ void do_command(DataType command) {
         case CMD_ORDER:
             if (TakeOrder()) time_tick();
             break;
+        case CMD_TAKE:
+            if (TakeFood()) time_tick();
+            break;
+        case CMD_GIVE:
+            if (GiveFood()) time_tick();
+            break;
         default:
             break;
     }
@@ -178,7 +186,7 @@ boolean TakeOrder() {
 
     if(meja != Nil) {
         if(meja->custAddress != Nil) {
-            if(meja->custAddress->order != Nil) {
+            if(meja->custAddress->order == Nil) {
                 // Get random Food from TabFood
                 tabFood = publish_getval_event(GET_TAB_FOOD).tabFood;
                 randInd = rand() % tabFood->N;   // Generate random int from 0 to N
@@ -368,5 +376,85 @@ boolean place_customer()
         }
     }
 
+    return false;
+}
+
+/**
+ * Take food
+ * Adds Food to Stack
+ * @return is operation successful
+ */
+boolean TakeFood() {
+    Food *food = publish_getval_event(UI_GET_POINTED_FOOD).ptrFood;
+    if(food != Nil) {
+        Push(&FoodStack, food);
+        DataType dt;
+        dt.list = FoodStack;
+        publish_1p_event(UI_SET_FOODSTACK, dt);
+
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Give food
+ * Give the food at the top of the stack to customer in a table, and deallocate the customer, order, and set the table customer pointer to Nil
+ * @return is operation successful
+ */
+boolean GiveFood() {
+    Meja *meja = publish_getval_event(UI_GET_POINTED_MEJA).ptrMeja;
+    Food *fdel;
+    address P, Prec, Pdel;
+
+    if(meja != Nil) {
+        // Check if Meja has customer
+        if(meja->custAddress != Nil) {
+            // Check if Customer has an Order
+            if(meja->custAddress->order != Nil) {
+                // Check if Food Stack is not empty
+                if(!IsEmpty(FoodStack)) {
+                    // Check if Food at the top of the stack matches the ordered food
+                    if(meja->custAddress->order->food == First(FoodStack)->info.food) {
+                        // Operation valid
+                        // Pop the stack
+                        Pop(&FoodStack, &fdel);
+
+                        // Remove the customer's order
+                        Prec = SearchOrderPrec(OrderList, meja->custAddress->order);
+
+                        if (Prec == Nil) {
+                            DelFirst(&OrderList, &Pdel);
+                        } else {
+                            DelAfter(&OrderList, &Pdel, Prec);
+                        }
+
+                        OrderDeallocate(meja->custAddress->order);
+
+                        // Deallocate Customer object
+                        CustomerDeallocate(meja->custAddress);
+
+                        // Remove association
+                        meja->custAddress = Nil;
+
+                        // Increment money
+                        currentGame.money += MONEY_SALES_INCREMENT;
+
+                        DataType dt;
+                        dt.integer = currentGame.money;
+                        publish_1p_event(UI_SET_MONEY, dt);
+
+                        dt.list = FoodStack;
+                        publish_1p_event(UI_SET_FOODSTACK, dt);
+
+                        // Refresh UI
+                        publish_event(UI_REFRESH_MAP);
+
+                        return true;
+                    }
+                }
+            }
+        }
+    }
     return false;
 }

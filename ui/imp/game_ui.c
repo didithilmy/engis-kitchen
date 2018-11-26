@@ -242,6 +242,15 @@ void ExecuteCommands(Kata kata) {
     } else if(CompareKata(kata, INS_ORDER, false)) {
         dt.cmd = CMD_ORDER;
         publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(kata, INS_TAKE, false)) {
+        dt.cmd = CMD_TAKE;
+        publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(kata, INS_CLEAR_TRAY, false)) {
+        dt.cmd = CMD_CLEARTRAY;
+        publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(kata, INS_GIVE, false)) {
+        dt.cmd = CMD_GIVE;
+        publish_1p_event(COMMAND, dt);
     }
 }
 
@@ -564,7 +573,7 @@ void buildGameScreen(int HORZ, int VERT) {
     // Initiate order panel
     printBorder((HEIGHT/2) + 1 + 3, HEIGHT + 3, 0, SIDE_PANEL_WIDTH);
     mvprintw((HEIGHT/2) + 2 + 3, 1, "%s", "Order");
-    orderWindow = newwin((HEIGHT/2) - 2, SIDE_PANEL_WIDTH - 1, (HEIGHT/2) + 1 + 4, 1);
+    orderWindow = newwin((HEIGHT/2) - 4, SIDE_PANEL_WIDTH - 1, (HEIGHT/2) + 1 + 6, 1);
 
     // Initiate food stack panel
     printBorder(3, 3 + (HEIGHT), WIDTH - SIDE_PANEL_WIDTH, WIDTH);
@@ -624,7 +633,24 @@ void uiRefreshMap() {
  * @param list
  */
 void updateFoodStack(DataType list) {
+    address P;
+    Kata foodName;
+    int i;
+    Stack S = list.list;
 
+    wclear(foodStackWindow);
+    P = First(S);
+    while(P != Nil) {
+        foodName = Info(P).food->name;
+        // Print food name
+        for(i = 1; i <= foodName.Length; i++) {
+            wprintw(foodStackWindow, "%c", foodName.TabKata[i]);
+        }
+        wprintw(foodStackWindow, "\n");
+        P = Next(P);
+    }
+
+    wrefresh(foodStackWindow);
 }
 
 /**
