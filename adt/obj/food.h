@@ -13,6 +13,7 @@
 typedef struct tFood {
 	POINT coordinate;
     Kata name;
+	int price;
 } Food;
 
 typedef struct {
@@ -24,7 +25,7 @@ Food *AddFood(TabFood *TF, Food F);
 //I.S adalah Tabel Food sembarang 
 //F.S adalah makanan ditambahkan dalam tabel makanan 
 
-Food CreateFood(POINT coord, Kata nama); 
+Food CreateFood(POINT coord, Kata nama, int price);
 //Fungsi pada awal loading file untuk menambahkan makanan dengan koordinatnya
 
 void InitTabFood(TabFood *T);

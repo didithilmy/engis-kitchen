@@ -15,7 +15,6 @@
 #include "../adt/headers.h"
 #include "../adt/food_stack.h"
 
-#define MONEY_SALES_INCREMENT 100
 #define MAX_FOOD_STACK_ELMT 3
 
 typedef struct {

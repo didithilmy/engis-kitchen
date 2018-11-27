@@ -28,11 +28,12 @@ Food *AddFood(TabFood *TF, Food F) {
  * @param name food name
  * @return food object
  */
-Food CreateFood(POINT coord, Kata name) {
+Food CreateFood(POINT coord, Kata name, int price) {
     Food food;
 
     food.coordinate = coord;
     food.name = name;
+    food.price = price;
 
     return food;
 }

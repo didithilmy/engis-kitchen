@@ -6,6 +6,7 @@
  * @author Muhammad Aditya Hilmy, NIM 18217025
  */
 
+#include <time.h>
 #include "manager/intro.h"
 #include "manager/game.h"
 #include "manager/map.h"
@@ -18,6 +19,9 @@ boolean EOP;
 void initialize_modules();
 
 int main() {
+    // Seed random generator with current time
+    srand((unsigned int) time(0));
+
     initialize_modules();
 
     // Initialize instruction set

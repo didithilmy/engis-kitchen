@@ -136,8 +136,8 @@ void map_manager_init() {
                 MKF_Ignore_Blank();
                 MKF_SalinKata();
                 nf = MKF_CKata;
-                // TODO ADD FOOD
-                registerFood(CreateFood(MakePOINT(xf, yf), nf));
+                // TODO get Food price from File
+                registerFood(CreateFood(MakePOINT(xf, yf), nf, 100 + (rand() % 400)));
             }
             ADVFILE();
             if (GetFCC() == ')')

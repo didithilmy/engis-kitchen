@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include "../game.h"
-#include "../../adt/headers.h"
 
 
 void load_game();
@@ -425,7 +424,9 @@ boolean place_customer()
 
                     // Place Customer to Meja
                     meja->custAddress = Info(Pdel).custAddress;
-                    meja->custAddress->patience = CUSTOMER_INITIAL_PATIENCE;
+
+                    // Randomize patience
+                    meja->custAddress->patience = 20 + (rand() % 10);
 
                     // Deallocate list element
                     Dealokasi(&Pdel);
@@ -506,7 +507,7 @@ boolean GiveFood() {
                         meja->custAddress = Nil;
 
                         // Increment money
-                        currentGame.money += MONEY_SALES_INCREMENT;
+                        currentGame.money += fdel->price;
 
                         DataType dt;
                         dt.integer = currentGame.money;
