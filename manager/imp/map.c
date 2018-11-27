@@ -28,6 +28,7 @@ void registerMeja(Meja meja);
 void registerFood(Food food);
 boolean isFoodPointerLegal(int x, int y);
 void InitializeMatrix();
+int katatoint (Kata kata);
 
 int MAP_WIDTH, MAP_HEIGHT;
 
@@ -48,7 +49,7 @@ void map_manager_init() {
     // Udah bener kok -didit
 
     // kamus
-    int xdr, ydr, xm, ym, nm, km, xdd, ydd, xf, yf;
+    Kata w,h,xdr, ydr, xm, ym, nm, km, xdd, ydd, xf, yf;
     char filename[30] = "map.dat";
     Kata nf,harga;
 
@@ -58,10 +59,12 @@ void map_manager_init() {
     {
         if (GetFCC() != ';')
         {
-            MAP_WIDTH = GetFCC() - '0'; // M
-            ADVFILE();
-            MKF_Ignore_Blank();
-            MAP_HEIGHT = GetFCC() - '0'; // N
+			MKF_SalinKata();			// M
+			w = MKF_CKata;
+            MAP_WIDTH = katatoint(w); // M
+            MKF_ADVKATA();
+			h = MKF_CKata; 
+            MAP_HEIGHT = katatoint(h); // N
 
             InitializeMatrix();
 
@@ -72,12 +75,12 @@ void map_manager_init() {
         ADVFILE();
         if (GetFCC() != ';')
         {
-            xdr = GetFCC() - '0'; // lokasi x pintu restoran
-            ADVFILE();
-            MKF_Ignore_Blank();
-            ydr = GetFCC() - '0'; // lokasi y pintu restoran
+            MKF_SalinKata();
+			xdr = MKF_CKata; // lokasi x pintu restoran
+            MKF_ADVKATA();
+			ydr = MKF_CKata; // lokasi y pintu restoran
 
-            restoDoor = MakePOINT(xdr, ydr);
+            restoDoor = MakePOINT(katatoint(xdr),katatoint(ydr));
             ADVFILE();
         }
         else {
@@ -89,17 +92,15 @@ void map_manager_init() {
             if (GetFCC() == '(')
             {
                 ADVFILE();
-                xm = GetFCC() - '0'; // lokasi x meja ke-n
-                ADVFILE();
-                MKF_Ignore_Blank();
-                ym = GetFCC() - '0'; // lokasi y meja ke-n
-                ADVFILE();
-                MKF_Ignore_Blank();
-                nm = GetFCC() - '0'; // nomor meja
-                ADVFILE();
-                MKF_Ignore_Blank();
-                km = GetFCC() - '0'; // isi per meja 2/4 orang
-                registerMeja(CreateMeja(MakePOINT(xm, ym), km, nm));
+                MKF_SalinKata();
+				xm = MKF_CKata;  // lokasi x meja ke-n
+				MKF_ADVKATA();
+				ym = MKF_CKata;  // lokasi y meja ke-n
+                MKF_ADVKATA();
+				nm = MKF_CKata;  // nomor meja
+                MKF_ADVKATA();
+				km = MKF_CKata; 
+                registerMeja(CreateMeja(MakePOINT(katatoint(xm),katatoint(ym)), katatoint(km), katatoint(nm)));
             }
             ADVFILE();
             if (GetFCC() == ')')
@@ -110,12 +111,12 @@ void map_manager_init() {
         ADVFILE();
         if (GetFCC() != ';')
         {
-            xdd = GetFCC() - '0'; // lokasi x pintu dapur
-            ADVFILE();
-            MKF_Ignore_Blank();
-            ydd = GetFCC() - '0'; // lokasi y pintu dapur
+            MKF_SalinKata();
+			xdd = MKF_CKata; // lokasi x pintu dapur
+			MKF_ADVKATA();
+			ydd = MKF_CKata ; // lokasi y pintu dapur
 
-            kitchenDoor = MakePOINT(xdd, ydd);
+            kitchenDoor = MakePOINT(katatoint(xdd),katatoint(ydd));
             ADVFILE();
         }
         else {
@@ -128,18 +129,15 @@ void map_manager_init() {
             if (GetFCC() == '(')
             {
                 ADVFILE();
-                xf = GetFCC() - '0'; // lokasi x makanan
-                ADVFILE();
-                MKF_Ignore_Blank();
-                yf = GetFCC() - '0'; // lokasi y makanan
-                ADVFILE();
-                MKF_Ignore_Blank();
                 MKF_SalinKata();
+				xf = MKF_CKata; // lokasi x makanan
+				MKF_ADVKATA();
+				yf = MKF_CKata; // lokasi y makanan
+                MKF_ADVKATA();
                 nf = MKF_CKata;
-                /* MKF_ADVKATA(); //ini untuk nambahin harga, jangan lupa di map.dat diubah, contoh : (4 1 hahaha 2000 ).
+                MKF_ADVKATA(); //ini untuk nambahin harga, jangan lupa di map.dat diubah, contoh : (4 1 hahaha 2000 ).
 				harga = MKF_CKata;
-				*/
-                registerFood(CreateFood(MakePOINT(xf, yf), nf, 100 + (rand() % 400)));
+                registerFood(CreateFood(MakePOINT(katatoint(xf),katatoint(yf)), nf,katatoint(harga)));
             }
             ADVFILE();
             if (GetFCC() == ')')
@@ -376,4 +374,18 @@ boolean isFoodPointerLegal(int x, int y) {
             return true;
         }
     }
+}
+
+/**
+ * Convert Kata to integer
+ */
+int katatoint (Kata kata) {
+	int i;
+	int total = 0;
+	
+	for (i=1;i<=kata.Length;i++) {
+		total *= 10;
+		total += kata.TabKata[i]-'0';
+	}
+	return total;
 }
