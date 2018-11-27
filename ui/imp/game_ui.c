@@ -339,6 +339,7 @@ void updateName(DataType name) {
  */
 void updateMapWindowCharacter(int x, int y, char *C) {
     int aIndex = (((y-1) * MapWidth) + x);
+    wclear(TabWindow.T[aIndex]);
     mvwprintw(TabWindow.T[aIndex], 0, 1, C);
     wnoutrefresh(TabWindow.T[aIndex]);
 }

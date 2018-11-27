@@ -137,7 +137,7 @@ void map_manager_init() {
                 nf = MKF_CKata;
                 MKF_ADVKATA(); //ini untuk nambahin harga, jangan lupa di map.dat diubah, contoh : (4 1 hahaha 2000 ).
 				harga = MKF_CKata;
-                registerFood(CreateFood(MakePOINT(katatoint(xf),katatoint(yf)), nf,katatoint(harga)));
+                registerFood(CreateFood(MakePOINT(katatoint(xf),katatoint(yf)), nf, katatoint(harga)));
             }
             ADVFILE();
             if (GetFCC() == ')')
