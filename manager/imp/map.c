@@ -50,7 +50,7 @@ void map_manager_init() {
     // kamus
     int xdr, ydr, xm, ym, nm, km, xdd, ydd, xf, yf;
     char filename[30] = "map.dat";
-    Kata nf;
+    Kata nf,harga;
 
     //algoritma
     STARTFILE(filename);
@@ -136,7 +136,9 @@ void map_manager_init() {
                 MKF_Ignore_Blank();
                 MKF_SalinKata();
                 nf = MKF_CKata;
-                // TODO get Food price from File
+                /* MKF_ADVKATA(); //ini untuk nambahin harga, jangan lupa di map.dat diubah, contoh : (4 1 hahaha 2000 ).
+				harga = MKF_CKata;
+				*/
                 registerFood(CreateFood(MakePOINT(xf, yf), nf, 100 + (rand() % 400)));
             }
             ADVFILE();
