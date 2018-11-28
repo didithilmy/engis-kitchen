@@ -25,6 +25,7 @@ void STARTKATA(char *string) {
 
     if(IsEOP()) {
         EndKata = true;
+        CKata.Length = 0;   // This line is required to clear the CKata buffer if the ribbon is empty
     } else {
         EndKata = false;
         SalinKata();

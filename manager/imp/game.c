@@ -197,8 +197,6 @@ DataType is_game_exists() {
 }
 
 void do_command(DataType command) {
-    Meja *ptrMeja;
-    Food *ptrFood;
     Commands cmd = command.cmd;
 
     // TODO keeps track of command, if necessary
