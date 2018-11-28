@@ -124,17 +124,23 @@ int main () {
 			ADVFILE(); 
 			MKF_SalinKata();
 			meja[i].capacity= katatoint(MKF_CKata);
-			MKF_ADVKATA(); 
-			meja[i].isi = katatoint(MKF_CKata);
-			MKF_ADVKATA(); 
-			meja[i].makanan = &MKF_CKata;  
-			i++; 
 			}
-            ADVFILE();
+			ADVFILE(); 
+			if (GetFCC() != ')'){
+			MKF_SalinKata();  
+			meja[i].isi = katatoint(MKF_CKata);
+			}
+			ADVFILE(); 
+			if (GetFCC() != ')') {
+			MKF_SalinKata(); 
+			meja[i].makanan = &MKF_CKata;  
+			}
+            ADVFILE(); 
             if (GetFCC() == ')')
             {
                 ADVFILE();
             }
+          i++; 
 		}
 	}
 
