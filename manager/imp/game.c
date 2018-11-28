@@ -47,7 +47,6 @@ int timeToCustomerArrival;
 void game_manager_init() {
     listen_event(NEW_GAME, &new_game);
     listen_event(LOAD_GAME, &load_game);
-    listen_event(SAVE_GAME, &save_game);
     listen_event(START_GAME, &start_game);
     listen_event(GAME_OVER, &game_over);
 
@@ -81,7 +80,6 @@ void load_game() {
 void save_game() {
     int i;
     address P;
-    char buffer[20];
     Kata foodName;
 
     TabMeja *tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
@@ -108,8 +106,7 @@ void save_game() {
     // Iterate Queue
     P = First(CustomerQueue);
     while(P != Nil) {
-        sprintf(buffer,"(%d %d )", P->info.custAddress->N, P->info.custAddress->patience);
-        fprintf(f, "%s", buffer);
+        fprintf(f, "(%d %d )", P->info.custAddress->N, P->info.custAddress->patience);
         P = Next(P);
     }
 
@@ -229,7 +226,7 @@ void do_command(DataType command) {
             if (GiveFood()) time_tick();
             break;
         case CMD_SAVE:
-            publish_event(SAVE_GAME);
+            save_game();
             break;
         default:
             break;
