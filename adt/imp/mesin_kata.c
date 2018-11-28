@@ -95,3 +95,18 @@ boolean CompareKata(Kata k1, Kata k2, boolean caseSensitive) {
         return isEqual;
     }
 }
+
+
+/**
+ * Convert Kata to integer
+ */
+int KataToInt (Kata kata) {
+    int i;
+    int total = 0;
+
+    for (i=1;i<=kata.Length;i++) {
+        total *= 10;
+        total += kata.TabKata[i]-'0';
+    }
+    return total;
+}

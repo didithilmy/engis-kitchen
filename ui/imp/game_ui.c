@@ -30,6 +30,8 @@ void uiRefreshMap();
 void updateFoodStack(DataType list);
 void updateOrderList(DataType list);
 void updateCustQueue(DataType list);
+void updatePosition(DataType pos);
+void updateRoom(DataType room);
 
 boolean isMoveLegal(POINT point);
 void movePlayer(POINT moveTo);
@@ -37,6 +39,8 @@ void updateTooltip(POINT loc);
 
 DataType uiGetPointedMeja();
 DataType uiGetPointedFood();
+DataType uiGetPosition();
+DataType uiGetRoom();
 
 // Global variables
 DataType uiCMoney, uiCLife, uiCTime, uiCName;
@@ -75,9 +79,14 @@ void game_ui_init() {
     listen_1p_event(UI_SET_FOODSTACK, &updateFoodStack);
     listen_1p_event(UI_SET_ORDERLIST, &updateOrderList);
     listen_1p_event(UI_SET_CUSTQUEUE, &updateCustQueue);
+    listen_1p_event(UI_SET_POSITION, &updatePosition);
+    listen_1p_event(UI_SET_ROOM, &updateRoom);
 
     listen_getval_event(UI_GET_POINTED_MEJA, &uiGetPointedMeja);
     listen_getval_event(UI_GET_POINTED_FOOD, &uiGetPointedFood);
+
+    listen_getval_event(UI_GET_POSITION, &uiGetPosition);
+    listen_getval_event(UI_GET_ROOM, &uiGetRoom);
 }
 
 /**
@@ -345,6 +354,23 @@ void updateMapWindowCharacter(int x, int y, char *C) {
     wclear(TabWindow.T[aIndex]);
     mvwprintw(TabWindow.T[aIndex], 0, 1, C);
     wnoutrefresh(TabWindow.T[aIndex]);
+}
+
+/**
+ * Update current position
+ * @param list
+ */
+void updatePosition(DataType pos) {
+    player_position.X = pos.point.X;
+    player_position.Y = pos.point.Y;
+}
+
+/**
+ * Update room
+ * @param room
+ */
+void updateRoom(DataType room) {
+    isInRestaurant = room.integer;
 }
 
 /**
@@ -762,6 +788,28 @@ DataType uiGetPointedFood() {
             dt.ptrFood = ElmtFood(matriks, player_position.Y, player_position.X);
         }
     }
+
+    return dt;
+}
+
+/**
+ * UI get position
+ * @return point
+ */
+DataType uiGetPosition() {
+    DataType dt;
+    dt.point = player_position;
+
+    return dt;
+}
+
+/**
+ * UI get room
+ * @return true if in restaurant
+ */
+DataType uiGetRoom() {
+    DataType dt;
+    dt.integer = isInRestaurant;
 
     return dt;
 }

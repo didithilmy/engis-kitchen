@@ -30,6 +30,9 @@ boolean TakeOrder();
 boolean TakeFood();
 boolean GiveFood();
 DataType is_game_exists();
+Food * getFoodAddrByFoodName(Kata foodName);
+Meja * getMejaAddrByTableNo(int tableNo);
+void clear_game_data();
 
 // Variables of game parameters
 GameState currentGame;
@@ -66,11 +69,220 @@ void game_manager_init() {
  * Called when a load game instruction is requested
  */
 void load_game() {
-    // TODO read files and load
-    currentGame.time = 0;
-    currentGame.life = 0;
-    currentGame.money = 1000;
-    currentGame.player_name = BuildKata("Player Lolz");
+    int capacity, patience, N, tableNo;
+    Customer *customer;
+    Order *order;
+    Food *food;
+    Meja *meja;
+    infotype data;
+    DataType dt;
+
+    // Clear game data
+    clear_game_data();
+
+    STARTFILE("game.dat");
+    while (!IsEOPF())
+    {
+        if (GetFCC() != ';')
+        {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                char d = GetFCC();
+                ADVFILE();
+                ADVFILE();
+                MKF_SalinKata();
+                int X = KataToInt(MKF_CKata);
+                MKF_ADVKATA();
+                int Y = KataToInt(MKF_CKata);
+
+                dt.integer = d == 'R';
+                publish_1p_event(UI_SET_ROOM, dt);
+
+                dt.point = MakePOINT(X, Y);
+                publish_1p_event(UI_SET_POSITION, dt);
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+
+        if (GetFCC() != ';')
+        {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+
+                // Set player name
+                currentGame.player_name = MKF_CKata;
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+        if (GetFCC() != ';') {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+                currentGame.money = KataToInt(MKF_CKata);
+                //printf("money %d\n", money);
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+        if (GetFCC() != ';') {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+                currentGame.life = KataToInt(MKF_CKata);
+                //printf("life %d\n", life);
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+        if (GetFCC() != ';') {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+                currentGame.time = KataToInt(MKF_CKata);
+                //printf("time %d\n", time);
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+
+        // Acquire Queue
+        while (GetFCC() != ';') {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+                capacity = KataToInt(MKF_CKata);
+                MKF_ADVKATA();
+                patience = KataToInt(MKF_CKata);
+
+                MakeCustomer(&customer);
+                customer->patience = patience;
+                customer->N = capacity;
+                customer->order = Nil;
+
+                data.custAddress = customer;
+                InsVLast(&CustomerQueue, data);
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+
+        // Acquire Stack
+        while (GetFCC() != ';') {
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+
+                // TODO search for matching food name in TabFood
+                food = getFoodAddrByFoodName(MKF_CKata);
+                data.food = food;
+                InsVLast(&FoodStack, data);
+            }
+            ADVFILE();
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+        ADVFILE();
+
+        // Acquire Meja
+        while (GetFCC() != '.') {
+            meja = Nil;
+
+            // Acquire Meja primary data
+            if (GetFCC() == '(') {
+                ADVFILE();
+                MKF_SalinKata();
+
+                capacity = KataToInt(MKF_CKata);
+
+                MKF_ADVKATA();
+                tableNo = KataToInt(MKF_CKata);
+
+                meja = getMejaAddrByTableNo(tableNo);
+                meja->capacity = capacity;
+            }
+
+            // Acquire Meja customer
+            ADVFILE();
+            if (GetFCC() != ')'){
+                MKF_SalinKata();
+                N = KataToInt(MKF_CKata);
+
+                MKF_ADVKATA();
+                patience = KataToInt(MKF_CKata);
+
+                ADVFILE();
+
+                MakeCustomer(&customer);
+                customer->patience = patience;
+                customer->N = N;
+            }
+
+            // Acquire ordered Food
+            if (GetFCC() != ')') {
+                MKF_SalinKata();
+                ADVFILE();
+
+                // Find food address
+                food = getFoodAddrByFoodName(MKF_CKata);
+
+                // If food exists, proceed
+                if(food != Nil) {
+                    // Create order
+                    // Meja must be initialized
+                    OrderAllocate(&order, food, meja);
+
+                    data.order = order;
+
+                    // Add order to list
+                    InsVLast(&OrderList, data);
+                }
+            }
+
+            if (GetFCC() == ')')
+            {
+                ADVFILE();
+            }
+        }
+    }
+
+    // Refresh UI
+    publish_event(UI_REFRESH_MAP);
+
+    dt.list = FoodStack;
+    publish_1p_event(UI_SET_FOODSTACK, dt);
+    dt.list = CustomerQueue;
+    publish_1p_event(UI_SET_CUSTQUEUE, dt);
+    dt.list = OrderList;
+    publish_1p_event(UI_SET_ORDERLIST, dt);
 }
 
 /**
@@ -90,6 +302,12 @@ void save_game() {
     int money = currentGame.money;
     int life = currentGame.life;
     int time = currentGame.time;
+
+    // Write player position
+    fprintf(f, "(%c %d %d );",
+            publish_getval_event(UI_GET_ROOM).integer ? 'R' : 'K',
+            publish_getval_event(UI_GET_POSITION).point.X,
+            publish_getval_event(UI_GET_POSITION).point.Y);
 
     // Write name
     fprintf(f,"(");
@@ -258,6 +476,25 @@ void new_game(DataType name) {
     currentGame.money = 0;
     currentGame.player_name = name.kata;
 
+    clear_game_data();
+
+    GameExists = true;
+}
+
+/**
+ * Called when game is over
+ */
+void game_over() {
+    GameExists = false;
+}
+
+/**
+ * Clear game data
+ */
+void clear_game_data() {
+    address Pdel;
+    int i;
+
     // Deallocate customer queue
     while(!IsEmpty(CustomerQueue)) {
         DelFirst(&CustomerQueue, &Pdel);
@@ -284,14 +521,6 @@ void new_game(DataType name) {
         }
     }
 
-    GameExists = true;
-}
-
-/**
- * Called when game is over
- */
-void game_over() {
-    GameExists = false;
 }
 
 
@@ -600,4 +829,44 @@ boolean GiveFood() {
         }
     }
     return false;
+}
+
+Food * getFoodAddrByFoodName(Kata foodName) {
+    int i;
+    boolean found;
+    TabFood *tabFood = publish_getval_event(GET_TAB_FOOD).tabFood;
+    i = 1;
+    found = false;
+    while(i <= tabFood->N && !found) {
+        found = CompareKata(foodName, tabFood->T[i].name, false);
+        if(!found) {
+            i++;
+        }
+    }
+
+    if(found) {
+        return &(tabFood->T[i]);
+    } else {
+        return Nil;
+    }
+}
+
+Meja * getMejaAddrByTableNo(int tableNo) {
+    int i;
+    boolean found;
+    TabMeja *tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
+    i = 1;
+    found = false;
+    while(i <= tabMeja->N && !found) {
+        found = tableNo == tabMeja->T[i].tableNo;
+        if(!found) {
+            i++;
+        }
+    }
+
+    if(found) {
+        return &(tabMeja->T[i]);
+    } else {
+        return Nil;
+    }
 }

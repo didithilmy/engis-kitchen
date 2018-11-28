@@ -54,4 +54,11 @@ Kata BuildKata(char *str);
  */
 boolean CompareKata(Kata k1, Kata k2, boolean caseSensitive);
 
+/**
+ * Convert Kata to Integer
+ * @param kata
+ * @return
+ */
+int KataToInt(Kata kata);
+
 #endif

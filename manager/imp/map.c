@@ -28,7 +28,6 @@ void registerMeja(Meja meja);
 void registerFood(Food food);
 boolean isFoodPointerLegal(int x, int y);
 void InitializeMatrix();
-int katatoint (Kata kata);
 
 int MAP_WIDTH, MAP_HEIGHT;
 
@@ -61,10 +60,10 @@ void map_manager_init() {
         {
 			MKF_SalinKata();			// M
 			w = MKF_CKata;
-            MAP_WIDTH = katatoint(w); // M
+            MAP_WIDTH = KataToInt(w); // M
             MKF_ADVKATA();
 			h = MKF_CKata; 
-            MAP_HEIGHT = katatoint(h); // N
+            MAP_HEIGHT = KataToInt(h); // N
 
             InitializeMatrix();
 
@@ -80,7 +79,7 @@ void map_manager_init() {
             MKF_ADVKATA();
 			ydr = MKF_CKata; // lokasi y pintu restoran
 
-            restoDoor = MakePOINT(katatoint(xdr),katatoint(ydr));
+            restoDoor = MakePOINT(KataToInt(xdr),KataToInt(ydr));
             ADVFILE();
         }
         else {
@@ -100,7 +99,7 @@ void map_manager_init() {
 				nm = MKF_CKata;  // nomor meja
                 MKF_ADVKATA();
 				km = MKF_CKata; 
-                registerMeja(CreateMeja(MakePOINT(katatoint(xm),katatoint(ym)), katatoint(km), katatoint(nm)));
+                registerMeja(CreateMeja(MakePOINT(KataToInt(xm),KataToInt(ym)), KataToInt(km), KataToInt(nm)));
             }
             ADVFILE();
             if (GetFCC() == ')')
@@ -116,7 +115,7 @@ void map_manager_init() {
 			MKF_ADVKATA();
 			ydd = MKF_CKata ; // lokasi y pintu dapur
 
-            kitchenDoor = MakePOINT(katatoint(xdd),katatoint(ydd));
+            kitchenDoor = MakePOINT(KataToInt(xdd),KataToInt(ydd));
             ADVFILE();
         }
         else {
@@ -137,7 +136,7 @@ void map_manager_init() {
                 nf = MKF_CKata;
                 MKF_ADVKATA(); //ini untuk nambahin harga, jangan lupa di map.dat diubah, contoh : (4 1 hahaha 2000 ).
 				harga = MKF_CKata;
-                registerFood(CreateFood(MakePOINT(katatoint(xf),katatoint(yf)), nf, katatoint(harga)));
+                registerFood(CreateFood(MakePOINT(KataToInt(xf),KataToInt(yf)), nf, KataToInt(harga)));
             }
             ADVFILE();
             if (GetFCC() == ')')
@@ -374,18 +373,4 @@ boolean isFoodPointerLegal(int x, int y) {
             return true;
         }
     }
-}
-
-/**
- * Convert Kata to integer
- */
-int katatoint (Kata kata) {
-	int i;
-	int total = 0;
-	
-	for (i=1;i<=kata.Length;i++) {
-		total *= 10;
-		total += kata.TabKata[i]-'0';
-	}
-	return total;
 }
