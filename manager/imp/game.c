@@ -9,6 +9,9 @@
 
 #include <stdlib.h>
 #include "../game.h"
+#include "../../adt/mesin_kata.h"
+#include "../../adt/headers.h"
+#include "../../eventbus/eventbus.h"
 
 
 void load_game();
@@ -76,7 +79,80 @@ void load_game() {
  * Called when a save game instruction is requested
  */
 void save_game() {
-    // TODO write file
+    int i;
+    address P;
+    char buffer[20];
+    Kata foodName;
+
+    TabMeja *tabMeja = publish_getval_event(GET_TAB_MEJA).tabMeja;
+
+    FILE *f = fopen("game.dat","w");
+
+    Kata nama = currentGame.player_name;
+    int money = currentGame.money;
+    int life = currentGame.life;
+    int time = currentGame.time;
+
+    // Write name
+    fprintf(f,"(");
+    // Iterate nama
+    for(i = 1; i <= nama.Length; i++) {
+        fprintf(f,"%c", nama.TabKata[i]);
+    }
+    fprintf(f," );");
+
+    fprintf(f, "(%d );", money);
+    fprintf(f, "(%d );", life);
+    fprintf(f, "(%d );",time);
+
+    // Iterate Queue
+    P = First(CustomerQueue);
+    while(P != Nil) {
+        sprintf(buffer,"(%d %d )", P->info.custAddress->N, P->info.custAddress->patience);
+        fprintf(f, "%s", buffer);
+        P = Next(P);
+    }
+
+    fprintf(f,";"); //untuk ngasi ';'
+
+    // Iterate Stack
+    P = First(FoodStack);
+    while(P != Nil) {
+        fprintf(f, "(");
+        foodName = P->info.food->name;
+        for(i = 1; i <= foodName.Length; i++) {
+            fprintf(f, "%c", foodName.TabKata[i]);
+        }
+        fprintf(f, " )");
+        P = Next(P);
+    }
+    fprintf(f,";"); //untuk ngasi
+
+    // Iterate Meja
+    for(i = 1; i <= tabMeja->N; i++) {
+        fprintf (f,"(%d %d ", tabMeja->T[i].capacity, tabMeja->T[i].tableNo);
+
+        // Check if Meja has an associated customer
+        if(tabMeja->T[i].custAddress != Nil) {
+            // If any, print patience and no of customer
+            fprintf(f, "%d %d ", tabMeja->T[i].custAddress->N, tabMeja->T[i].custAddress->patience);
+
+            // Print foodName, if an order exists
+            if(tabMeja->T[i].custAddress->order != Nil) {
+                foodName = tabMeja->T[i].custAddress->order->food->name;
+                for (i = 1; i <= foodName.Length; i++) {
+                    fprintf(f, "%c", foodName.TabKata[i]);
+                }
+                fprintf(f, " ");    // Prints space (BLANK)
+            }
+        }
+        fprintf(f, ")");
+    }
+
+    // Print MARK
+    fprintf(f,".");
+
+    fclose(f);
 }
 
 /**
@@ -151,6 +227,9 @@ void do_command(DataType command) {
             break;
         case CMD_GIVE:
             if (GiveFood()) time_tick();
+            break;
+        case CMD_SAVE:
+            publish_event(SAVE_GAME);
             break;
         default:
             break;

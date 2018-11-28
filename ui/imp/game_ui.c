@@ -265,6 +265,9 @@ void ExecuteCommands(Kata kata) {
     } else if(CompareKata(kata, INS_GIVE, false)) {
         dt.cmd = CMD_GIVE;
         publish_1p_event(COMMAND, dt);
+    } else if(CompareKata(kata, INS_SAVE, false)) {
+        dt.cmd = CMD_SAVE;
+        publish_1p_event(COMMAND, dt);
     }
 }
 
