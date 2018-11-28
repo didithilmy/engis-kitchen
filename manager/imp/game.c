@@ -244,6 +244,8 @@ void load_game() {
                 MakeCustomer(&customer);
                 customer->patience = patience;
                 customer->N = N;
+
+                meja->custAddress = customer;
             }
 
             // Acquire ordered Food
@@ -260,9 +262,11 @@ void load_game() {
                     // Meja must be initialized
                     OrderAllocate(&order, food, meja);
 
-                    data.order = order;
+                    // Add Order to Customer
+                    meja->custAddress->order = order;
 
                     // Add order to list
+                    data.order = order;
                     InsVLast(&OrderList, data);
                 }
             }
@@ -273,6 +277,8 @@ void load_game() {
             }
         }
     }
+
+    GameExists = true;
 
     // Refresh UI
     publish_event(UI_REFRESH_MAP);

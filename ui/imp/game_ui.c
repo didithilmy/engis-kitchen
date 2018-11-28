@@ -8,11 +8,7 @@
 
 #include "../game_ui.h"
 #include "../../ins_set.h"
-#include "../../adt/headers.h"
 #include "../gameover_ui.h"
-#include "../../eventbus/eventbus.h"
-#include "../../adt/point.h"
-#include "../../adt/mesin_kata.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands(Kata kata);
@@ -587,8 +583,6 @@ void buildGameScreen(int HORZ, int VERT) {
     curs_set(1);
 
     resizeTerminalWindow(WIDTH + 2, HEIGHT + MAP_TOP_OFFSET_LINE + MAP_TOP_OFFSET_LINE + 1);
-
-    // TODO add delay to allow the window size to stabilize
 
     TabWindow.N = HORZ * VERT;
 
