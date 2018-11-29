@@ -54,12 +54,13 @@ $ make engi
 
 ### Credits
 Engi's Kitchen Expansion is made with ~~force~~ passion by:
-|Name|NIM|
-|---|---|
-|Muhammad Aditya Hilmy|18217025|
-|Zalikha Adiera Gambetta|18217027|
-|Muhammad Yanza Hattari|18217043|
-|Claudia Renata Maharani Danardono|18217048|
+
+| Name | NIM |
+| --- | --- |
+| Muhammad Aditya Hilmy | 18217025 |
+| Zalikha Adiera Gambetta | 18217027 |
+| Muhammad Yanza Hattari | 18217043 |
+| Claudia Renata Maharani Danardono | 18217048 |
 
 ### License
 See [LICENSE](LICENSE)
