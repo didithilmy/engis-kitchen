@@ -10,8 +10,6 @@
 
 #include <stdlib.h>
 #include "../map.h"
-#include "../../eventbus/eventbus.h"
-#include "../../adt/headers.h"
 
 
 DataType get_map_width();

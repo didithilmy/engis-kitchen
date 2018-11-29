@@ -1,3 +1,11 @@
+/**
+ * Engi's Kitchen Expansion
+ * Mesin Kata abstraction
+ *
+ * Header file template provided by ITB
+ * @file mesin_kata.c
+ */
+
 #ifndef PROJECT_MESIN_KATA_H
 #define PROJECT_MESIN_KATA_H
 

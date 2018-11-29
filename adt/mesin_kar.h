@@ -1,3 +1,11 @@
+/**
+ * Engi's Kitchen Expansion
+ * Mesin Karakter abstraction
+ *
+ * Header file template provided by ITB
+ * @file mesin_kar.c
+ */
+
 #ifndef __MESIN_KAR__
 #define __MESIN_KAR__
 

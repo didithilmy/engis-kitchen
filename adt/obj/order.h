@@ -1,6 +1,10 @@
 /**
- * Order adt
+ * Engi's Kitchen Expansion
+ * Order abstract data type
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  */
+
 
 #ifndef ENGIS_KITCHEN_ORDER_H
 #define ENGIS_KITCHEN_ORDER_H

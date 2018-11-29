@@ -3,7 +3,7 @@
  * Intro display abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
- * @file display.h
+ * @file intro_ui.h
  */
 
 #ifndef ENGIS_KITCHEN_GMOVER_DISPLAY_H
@@ -16,6 +16,7 @@
 #include <ctype.h>
 
 #include "ui_commons.h"
+#include "../ins_set.h"
 
 extern FIELD *intro_field[2];
 extern FORM  *nameForm;

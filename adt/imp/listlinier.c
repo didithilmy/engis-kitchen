@@ -1,4 +1,5 @@
 /**
+ * Engi's Kitchen Expansion
  * Order list abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
@@ -12,8 +13,6 @@
 /* infotype adalah integer */
 
 #include "../listlinier.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 /* Definisi list : */
 /* List kosong : First(L) = Nil */
@@ -62,89 +61,6 @@ void Dealokasi (address *P)
 {
 	free(*P);
 }
-
-/****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
-//address Search (List L, infotype X)
-/* Mencari apakah ada elemen list dengan Info(P)= X */
-/* Jika ada, mengirimkan address elemen tersebut. */
-/* Jika tidak ada, mengirimkan Nil */
-/*{
-	// KAMUS
-	address P;
-	bool Found;
-	
-	// ALGORITMA
-	P = First(L);
-	Found = false;
-	while ((P != Nil) && (!Found)){
-		if (Info(P) == X){
-			Found = true;
-		} else{
-			P = Next(P);
-		}
-	}
-	if (Found){
-		return P;
-	} else{
-		return Nil;
-	}
-}*/
-
-bool FSearch (List L, address P)
-/* Mencari apakah ada elemen list yang beralamat P */
-/* Mengirimkan true jika ada, false jika tidak ada */
-{
-	/* KAMUS */
-	address P1;
-	bool Found;
-	
-	/* ALGORITMA */
-	P1 = First(L);
-	Found = false;
-	while ((P1 != Nil) && (!Found)) {
-		if (P == P1) {
-			Found = true;
-		} else {
-			P1 = Next(P1);
-		}
-	}
-	return(Found);	
-}
-
-//address SearchPrec (List L, infotype X)
-/* Mengirimkan address elemen sebelum elemen yang nilainya=X */
-/* Mencari apakah ada elemen list dengan Info(P)=X */
-/* Jika ada, mengirimkan address Prec, dengan Next(Prec)=P dan Info(P)=X. */
-/* Jika tidak ada, mengirimkan Nil */
-/* Jika P adalah elemen pertama, maka Prec=Nil */
-/* Search dengan spesifikasi seperti ini menghindari */
-/* traversal ulang jika setelah Search akan dilakukan operasi lain */
-/*{
-	// KAMUS
-	address Prec, P;
-	bool Found;
-	
-	// ALGORITMA
-	P = First(L);
-	Found = false;
-	if (Info(P)==X){
-		return (Nil);
-	} else {
-		while ((Next(P)!=Nil)&&(!Found)) {
-			Prec = P;
-			P = Next(P);
-			if (Info(P)==X) {
-				Found = true;
-			}
-		}
-		if (Found) {
-			return (Prec);
-		} else {
-			return (Nil);
-		}
-	}				
-}*/
-
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
@@ -259,32 +175,7 @@ void DelFirst (List *L, address *P)
         Last(*L) = Nil;
     }
 }
-//void DelP (List *L, infotype X)
-/* I.S. Sembarang */
-/* F.S. Jika ada elemen list beraddress P, dengan Info(P)=X  */
-/* Maka P dihapus dari list dan di-dealokasi */
-/* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
-/* List mungkin menjadi kosong karena penghapusan */
-/*{
-	// KAMUS
-	address P, Prec;
-	// ALGORITMA
-	if (X == Info(First(*L))){
-		P = First(*L);
-		DelFirst(L, &P);
-	} else{
-		Prec = First(*L);
-		while ((Next(Prec) != Nil) && (Info(Next(Prec)) != X)){
-			Prec = Next(Prec);
-		}
-		if (Next(Prec) != Nil){
-			P = Next(Prec);
-			Next(Prec) = Next(Next(Prec));
-			Next(P) = Nil;
-			Dealokasi(&P);
-		}
-	}
-}	*/
+
 void DelLast (List *L, address *P)
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */
@@ -310,6 +201,7 @@ void DelLast (List *L, address *P)
         Last(*L) = PrecLast;
 	}
 }
+
 void DelAfter (List *L, address *Pdel, address Prec)
 /* I.S. List tidak kosong. Prec adalah anggota list  */
 /* F.S. Menghapus Next(Prec): */

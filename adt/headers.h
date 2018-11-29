@@ -1,7 +1,8 @@
 /**
  * Engi's Kitchen Expansion
- * Headers file
+ * ADT headers file
  *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  * @file headers.h
  */
 

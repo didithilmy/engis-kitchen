@@ -1,8 +1,7 @@
 /**
  * Order list abstraction
  *
- * @author Muhammad Aditya Hilmy, NIM 18217025
- * @author Muhammad Yanza Hattari, NIM 18217043
+ * Header file template provided by ITB, with modifications
  */
 
 

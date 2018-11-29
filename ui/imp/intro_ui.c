@@ -7,7 +7,6 @@
  */
 
 #include "../intro_ui.h"
-#include "../../ins_set.h"
 
 void intro_driver(FORM *form, FIELD **fields, int ch);
 void Intro_ExecuteCommands();

@@ -1,8 +1,14 @@
+/**
+ * Engi's Kitchen Expansion
+ * Matrix abstract data type
+ *
+ * @author Zalikha Adiera Gambetta, NIM 18217027
+ */
+
 /* ********** Definisi TYPE MATRIKS dengan indeks dan elemen integer ********** */
 
 #include "../matriks.h"
-#include <stdio.h>
-    
+
 /* *** Konstruktor membentuk MATRIKS *** */
 
 void MakeMATRIKS (int NB, int NK, MATRIKS * M){

@@ -1,7 +1,6 @@
 /**
  * Customer queue abstraction
- *
- * @author Muhammad Aditya Hilmy, NIM 18217025
+ * Header file template provided by ITB
  */
 
 #ifndef ENGIS_KITCHEN_CUSTOMER_QUEUE_H

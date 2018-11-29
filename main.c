@@ -10,11 +10,7 @@
 #include "manager/intro.h"
 #include "manager/game.h"
 #include "manager/map.h"
-
-char command[32];
-
-Kata CKata;
-boolean EOP;
+#include "ui/game_ui.h"
 
 void initialize_modules();
 

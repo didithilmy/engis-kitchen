@@ -1,9 +1,10 @@
 /**
+ * Engi's Kitchen Expansion
  * Mesin Kar test driver
+ *
  * @author Muhammad Aditya Hilmy, NIM 18217025
  */
 #include "../adt/mesin_kar.h"
-#include <stdio.h>
 
 char CC;
 
@@ -16,9 +17,9 @@ int main() {
     scanf("%[^\n]s", buf);
     START(buf);
 
-    // Reprint Kata
+    // Reprint Kar
     do {
-        printf("%d ", GetCC());
+        printf("%c\n", GetCC());
         ADV();
     } while (!IsEOP());
 }

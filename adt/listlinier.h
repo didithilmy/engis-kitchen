@@ -1,3 +1,8 @@
+/**
+ * Linear list abstraction
+ * Header file template provided by ITB
+ */
+
 /* File : listlinier.h */
 /* contoh ADT list berkait dengan representasi fisik pointer  */
 /* Representasi address dengan pointer */

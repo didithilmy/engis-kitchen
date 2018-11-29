@@ -1,3 +1,7 @@
+/**
+ * Boolean type definitions
+ * Header file template provided by ITB
+ */
 #ifndef BOOL
 #define BOOL
 #define boolean int

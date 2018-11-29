@@ -1,6 +1,10 @@
 /**
+ * Engi's Kitchen Expansion
  * Customer abstract data type
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  */
+
 
 #ifndef ENGIS_KITCHEN_CUSTOMER_H
 #define ENGIS_KITCHEN_CUSTOMER_H

@@ -1,6 +1,10 @@
-
+/**
+ * Engi's Kitchen Expansion
+ * Stack food test driver
+ *
+ * @author Muhammad Yanza Hattari, NIM 18217043
+ */
 #include "../adt/food_stack.h" 
-
 
 int main () { 
 	
@@ -10,24 +14,16 @@ int main () {
 	int price,x,y,i;
 	
 	CreateEmpty(&stackfood);
-	kata.TabKata[1] = 'K';
-	kata.TabKata[2] = 'o';
-	kata.TabKata[3] = 'l';
-	kata.TabKata[4] = 'a';
-	kata.Length = 4;
+	kata = BuildKata("Kola");
 	
 	price = 100;
 	x = 2;
 	y =5;
 	food = CreateFood(MakePOINT(x,y),kata,price);
 	Push(&stackfood,&food);
-	
-	kata.TabKata[1] = 'a';
-	kata.TabKata[2] = 'u';
-	kata.TabKata[3] = 'd';
-	kata.TabKata[4] = 'i';
-	kata.Length = 4;
-	
+
+	kata = BuildKata("Audi");
+
 	price = 200;
 	x = 3;
 	y =6;

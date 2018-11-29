@@ -1,6 +1,10 @@
-//
-// Created by Muhammad Aditya Hilmy on 12/11/18.
-//
+/**
+ * Engi's Kitchen Expansion
+ * Event definitions
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @file events.h
+ */
 
 #ifndef ENGIS_KITCHEN_EVENTS_H
 #define ENGIS_KITCHEN_EVENTS_H
@@ -19,7 +23,7 @@ typedef enum {
 #define NO_OF_EVENTS LAST
 
 typedef enum {
-    CMD_GU, CMD_GD, CMD_GL, CMD_GR, CMD_LOAD, CMD_SAVE, CMD_ORDER, CMD_TAKE, CMD_GIVE, CMD_PLACE, CMD_CLEARTRAY
+    CMD_GU, CMD_GD, CMD_GL, CMD_GR, CMD_SAVE, CMD_ORDER, CMD_TAKE, CMD_GIVE, CMD_PLACE, CMD_CLEARTRAY
 } Commands;
 
 #endif //ENGIS_KITCHEN_EVENTS_H

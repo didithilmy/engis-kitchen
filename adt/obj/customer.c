@@ -1,7 +1,8 @@
 /**
+ * Engi's Kitchen Expansion
  * Customer abstract data type
  *
- * @author TODO ISI AUTHORNYA YANG BENER PLS
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  */
 
 #include "customer.h"

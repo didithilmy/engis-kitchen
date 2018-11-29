@@ -1,4 +1,5 @@
 /**
+ * Engi's Kitchen Expansion
  * Food stack abstraction for linear list
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025

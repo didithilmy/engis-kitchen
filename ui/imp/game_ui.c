@@ -7,8 +7,6 @@
  */
 
 #include "../game_ui.h"
-#include "../../ins_set.h"
-#include "../gameover_ui.h"
 
 void driver(FORM *form, FIELD **fields, int ch);
 void ExecuteCommands(Kata kata);

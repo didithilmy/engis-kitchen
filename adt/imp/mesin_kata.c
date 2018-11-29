@@ -6,8 +6,6 @@
  * @file mesin_kata.c
  */
 
-
-
 #include "../mesin_kata.h"
 
 boolean EndKata;

@@ -1,6 +1,9 @@
-//
-// Created by Muhammad Aditya Hilmy on 18/11/18.
-//
+/**
+ * Engi's Kitchen Expansion
+ * Meja abstract data type
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
+ */
 
 #include <stddef.h>
 #include "meja.h"

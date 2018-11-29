@@ -1,7 +1,6 @@
 /**
  * Food stack abstraction for linear list
- *
- * @author Muhammad Aditya Hilmy, NIM 18217025
+ * Header file template provided by ITB
  */
 
 #ifndef ENGIS_KITCHEN_FOOD_STACK_H

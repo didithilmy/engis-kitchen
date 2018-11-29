@@ -1,7 +1,11 @@
 /**
- * Food adt
+ * Engi's Kitchen Expansion
+ * Food abstract data type
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
  */
- 
+
+
 #define MAX_FOOD 20
 
 #ifndef ENGIS_KITCHEN_FOOD_H

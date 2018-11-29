@@ -11,6 +11,7 @@
 #define ENGIS_KITCHEN_MAP_H
 
 #include "../adt/headers.h"
+#include "../eventbus/eventbus.h"
 
 void map_manager_init();
 

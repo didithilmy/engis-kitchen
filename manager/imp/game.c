@@ -3,15 +3,15 @@
  * Game manager abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
+ * @author Zalikha Adiera Gambetta, NIM 18217027
  * @author Muhammad Yanza Hattari, NIM 18217043
+ * @author Claudia Renata M.D. NIM 18217048
+ *
  * @file game.c
  */
 
 #include <stdlib.h>
 #include "../game.h"
-#include "../../adt/headers.h"
-#include "../../eventbus/eventbus.h"
-
 
 void load_game();
 void save_game();
@@ -198,7 +198,6 @@ void load_game() {
                 ADVFILE();
                 MKF_SalinKata();
 
-                // TODO search for matching food name in TabFood
                 food = getFoodAddrByFoodName(MKF_CKata);
                 data.food = food;
                 InsVLast(&FoodStack, data);
@@ -265,8 +264,7 @@ void load_game() {
                     meja->custAddress->order = order;
 
                     // Add order to list
-                    data.order = order;
-                    InsVLast(&OrderList, data);
+                    InsOrderLast(&OrderList, order);
                 }
             }
 

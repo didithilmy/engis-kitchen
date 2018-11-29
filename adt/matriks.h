@@ -1,3 +1,8 @@
+/**
+ * Matrix abstract data type
+ * Header file template provided by ITB, with modification
+ */
+
 /* ********** Definisi TYPE MATRIKS dengan indeks dan elemen integer ********** */
 
 #ifndef MATRIKS_H

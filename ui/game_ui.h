@@ -17,6 +17,8 @@
 
 #include "ui_commons.h"
 #include "../adt/headers.h"
+#include "../ins_set.h"
+#include "gameover_ui.h"
 
 #define MAP_GRID_LINE 3
 #define MAP_GRID_COL 6
@@ -25,13 +27,11 @@
 
 extern FIELD *field[2];
 extern FORM  *commandForm;
-extern WINDOW **mapWindows;
 extern WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
 extern WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow, *tooltipWindow;
 
 FIELD *field[2];
 FORM  *commandForm;
-WINDOW **mapWindows;
 WINDOW *nameWindow, *moneyWindow, *lifeWindow, *timeWindow;
 WINDOW *waitingCustWindow, *orderWindow, *foodStackWindow, *tooltipWindow;
 

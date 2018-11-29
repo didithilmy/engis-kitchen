@@ -1,3 +1,11 @@
+/**
+ * Engi's Kitchen Expansion
+ * Mesin Karakter file abstraction
+ *
+ * @author Muhammad Yanza Hattari, NIM 18217043
+ * @file mesin_kar_file.c
+ */
+
 #include "../mesin_kar_file.h"
 
 char FCC;

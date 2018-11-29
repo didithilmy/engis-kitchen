@@ -1,13 +1,10 @@
 /**
  * Engi's Kitchen Expansion
- * Mesin Kata abstraction
+ * Mesin Kata file abstraction
  *
- * @author Muhammad Aditya Hilmy, NIM 18217025
  * @author Muhammad Yanza Hattari, NIM 18217043
  * @file mesin_kata_file.c
  */
-
-
 
 #include "../mesin_kata_file.h"
 

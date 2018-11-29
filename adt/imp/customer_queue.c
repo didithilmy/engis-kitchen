@@ -1,4 +1,5 @@
 /**
+ * Engi's Kitchen Expansion
  * Customer queue abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
