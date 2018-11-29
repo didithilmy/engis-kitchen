@@ -13,8 +13,6 @@
  * @param ch cursor
  */
 void ui_driver(FORM *form, FIELD **fields, int ch) {
-    int i;
-
     switch (ch) {
         case KEY_DOWN:
             form_driver(form, REQ_NEXT_FIELD);

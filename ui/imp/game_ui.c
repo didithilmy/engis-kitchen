@@ -746,7 +746,6 @@ DataType uiGetPointedMeja() {
     // Local variables
     DataType dt;
     MATRIKS matriks;
-    Kata foodName;
 
     dt.ptrMeja = Nil;
 
@@ -769,7 +768,6 @@ DataType uiGetPointedFood() {
     // Local variables
     DataType dt;
     MATRIKS matriks;
-    Kata foodName;
 
     dt.ptrFood = Nil;
 

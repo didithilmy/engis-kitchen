@@ -149,8 +149,6 @@ void InsertLast (List *L, address P)
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. P ditambahkan sebagai elemen terakhir yang baru */
 {
-	/* KAMUS */
-	address Last;
 	/* ALGORITMA */
 	if (IsEmpty(*L)){
 		InsertFirst(L, P);

@@ -8,7 +8,6 @@
 
 
 #include "../order_list.h"
-#include "../headers.h"
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/

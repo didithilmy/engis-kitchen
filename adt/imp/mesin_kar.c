@@ -66,7 +66,7 @@ boolean IsEOP() {
  */
 char ToUpper(char lower) {
     if(lower >= 'a' && lower <= 'z') {
-        return lower - 32;
+        return (char) (lower - 32);
     } else {
         return lower;
     }

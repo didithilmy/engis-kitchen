@@ -21,7 +21,7 @@
 
 typedef int indeks; /* indeks baris, kolom */
 typedef enum {
-    M_KOSONG , M_MEJA , M_DOOR , M_FOOD
+    M_KOSONG, M_MEJA, M_FOOD
 } MatriksType;
 typedef struct {
 	MatriksType TipeMatriks;

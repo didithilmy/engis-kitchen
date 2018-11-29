@@ -471,9 +471,6 @@ void time_tick() {
  * @param name player's name
  */
 void new_game(DataType name) {
-    int i;
-    address Pdel;
-
     currentGame.time = 0;
     currentGame.life = 5;
     currentGame.money = 0;

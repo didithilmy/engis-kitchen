@@ -71,8 +71,6 @@ void intro_driver(FORM *form, FIELD **fields, int ch) {
  * Execute command stored in CKata
  */
 void Intro_ExecuteCommands() {
-    DataType dt;
-
     if(CompareKata(CKata, INS_EXIT, false)) {
         keep_requesting = false;
     } else if(CompareKata(CKata, INS_START, false)) {
