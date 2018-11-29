@@ -3,7 +3,7 @@
  * Game display abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
- * @file display.c
+ * @file game_ui.c
  */
 
 #include "../game_ui.h"

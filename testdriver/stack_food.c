@@ -1,6 +1,5 @@
 
 #include "../adt/food_stack.h" 
-#include "../adt/obj/food.h"
 
 
 int main () { 

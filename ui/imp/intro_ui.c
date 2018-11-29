@@ -3,7 +3,7 @@
  * Intro display abstraction
  *
  * @author Muhammad Aditya Hilmy, NIM 18217025
- * @file display.c
+ * @file intro_ui.c
  */
 
 #include "../intro_ui.h"

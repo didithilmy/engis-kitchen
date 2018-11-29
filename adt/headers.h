@@ -11,7 +11,6 @@
 #include "boolean.h"
 #include "customer_queue.h"
 #include "food_stack.h"
-#include "jam.h"
 #include "listlinier.h"
 #include "matriks.h"
 #include "mesin_kar.h"

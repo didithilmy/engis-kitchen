@@ -1,6 +1,9 @@
-//
-// Created by Muhammad Aditya Hilmy on 10/11/18.
-//
+/**
+ * Engi's Kitchen Expansion
+ * User Interface Commons
+ *
+ * @author Muhammad Aditya Hilmy, NIM 18217025
+ */
 
 #include <stdlib.h>
 #include "../ui_commons.h"

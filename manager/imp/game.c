@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include "../game.h"
-#include "../../adt/mesin_kata.h"
 #include "../../adt/headers.h"
 #include "../../eventbus/eventbus.h"
 

@@ -12,7 +12,6 @@
 #include "../map.h"
 #include "../../eventbus/eventbus.h"
 #include "../../adt/headers.h"
-#include "../../adt/point.h"
 
 
 DataType get_map_width();

@@ -13,7 +13,6 @@
 #include "../ins_set.h"
 #include "../ui/game_ui.h"
 #include "../adt/headers.h"
-#include "../adt/food_stack.h"
 
 #define MAX_FOOD_STACK_ELMT 3
 
