@@ -1,0 +1,3 @@
+/Users/sashagambetta/Desktop/TUBES ALSTRUKDAT/engis-kitchen/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/sashagambetta/Desktop/TUBES ALSTRUKDAT/engis-kitchen/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/sashagambetta/Desktop/TUBES ALSTRUKDAT/engis-kitchen/cmake-build-debug/CMakeFiles/engis_kitchen.dir
