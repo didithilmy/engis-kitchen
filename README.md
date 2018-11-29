@@ -31,6 +31,7 @@ Dillinger uses a number of open source projects to work properly:
 ### Installation
 
 Engi's Kitchen Expansion requires [ncurses](https://www.gnu.org/software/ncurses/) to run.
+
 Ncurses is only supported in Linux and macOS.
 
 Install the dependencies.
@@ -64,4 +65,5 @@ Engi's Kitchen Expansion is made with ~~force~~ passion by:
 
 ### License
 See [LICENSE](LICENSE)
+
 (you can use this source for your own Tubes, but you should include the name of the authors and the license, which will get you enough trouble anyway)
