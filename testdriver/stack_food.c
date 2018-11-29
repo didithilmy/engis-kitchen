@@ -8,7 +8,7 @@ int main () {
 	Food food;
 	Stack stackfood ; 
 	Kata kata;
-	int price,x,y;
+	int price,x,y,i;
 	
 	CreateEmpty(&stackfood);
 	kata.TabKata[1] = 'K';
@@ -36,6 +36,14 @@ int main () {
 	Push(&stackfood,&food);
 	
 	printf("%d \n",NbElmt(stackfood));
-	//TODO POP MAAF DIT GUE GA BISA POP ANEH BET
+	Food * ptrfood;
+	Pop(&stackfood, &ptrfood);
+	
+	Kata foodname = ptrfood->name;
+	for (i=1;i<=foodname.Length;i++) {
+		printf("%c",foodname.TabKata[i]);
+	}
+	printf("\n");
+	
 	return 0;
 } 
